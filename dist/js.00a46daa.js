@@ -889,7 +889,107 @@ function _asyncToGenerator(fn) {
 }
 
 module.exports = _asyncToGenerator;
-},{}],"../node_modules/@babel/runtime/helpers/classCallCheck.js":[function(require,module,exports) {
+},{}],"js/utils.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.debounce = void 0;
+
+var debounce = function debounce(func) {
+  var delay = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1000;
+  var timeout;
+  return function () {
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    if (timeout) {
+      clearTimeout(timeout);
+    }
+
+    timeout = setTimeout(function () {
+      func.apply(null, args);
+    }, delay);
+  };
+};
+
+exports.debounce = debounce;
+},{}],"js/views/search.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.createAutoComplete = void 0;
+
+var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
+
+var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
+
+var _utils = require("../utils");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var createAutoComplete = function createAutoComplete(_ref) {
+  var root = _ref.root,
+      placeholder = _ref.placeholder,
+      fetchData = _ref.fetchData,
+      renderItem = _ref.renderItem,
+      onItemSelect = _ref.onItemSelect,
+      setInputValue = _ref.setInputValue;
+  root.innerHTML = "\n        <div class=\"search-bar\">\n            <input type=\"text\" placeholder=\"".concat(placeholder, "\">\n        </div>\n        <div class=\"auto-complete-list inactive-list\"></div>\n    ");
+  var input = root.querySelector('input');
+
+  var inputChangeHandler = /*#__PURE__*/function () {
+    var _ref2 = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee(event) {
+      var items, autoCompleteList;
+      return _regenerator.default.wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              _context.next = 2;
+              return fetchData(event.target.value);
+
+            case 2:
+              items = _context.sent;
+              autoCompleteList = document.querySelector('.auto-complete-list');
+              autoCompleteList.classList.remove('inactive-list');
+
+              while (autoCompleteList.firstChild) {
+                autoCompleteList.removeChild(autoCompleteList.lastChild);
+              }
+
+              Array.from(items).forEach(function (item) {
+                var autoCompleteItem = document.createElement('div');
+                autoCompleteItem.classList.add('auto-complete-item');
+                autoCompleteItem.innerHTML = renderItem(item);
+                autoCompleteItem.addEventListener('click', function () {
+                  input.value = setInputValue(item);
+                  onItemSelect(item);
+                });
+                autoCompleteList.appendChild(autoCompleteItem);
+              });
+
+            case 7:
+            case "end":
+              return _context.stop();
+          }
+        }
+      }, _callee);
+    }));
+
+    return function inputChangeHandler(_x) {
+      return _ref2.apply(this, arguments);
+    };
+  }();
+
+  input.addEventListener('input', (0, _utils.debounce)(inputChangeHandler, 500));
+};
+
+exports.createAutoComplete = createAutoComplete;
+},{"@babel/runtime/regenerator":"../node_modules/@babel/runtime/regenerator/index.js","@babel/runtime/helpers/asyncToGenerator":"../node_modules/@babel/runtime/helpers/asyncToGenerator.js","../utils":"js/utils.js"}],"../node_modules/@babel/runtime/helpers/classCallCheck.js":[function(require,module,exports) {
 function _classCallCheck(instance, Constructor) {
   if (!(instance instanceof Constructor)) {
     throw new TypeError("Cannot call a class as a function");
@@ -2660,7 +2760,16 @@ module.exports.default = axios;
 
 },{"./utils":"../node_modules/axios/lib/utils.js","./helpers/bind":"../node_modules/axios/lib/helpers/bind.js","./core/Axios":"../node_modules/axios/lib/core/Axios.js","./core/mergeConfig":"../node_modules/axios/lib/core/mergeConfig.js","./defaults":"../node_modules/axios/lib/defaults.js","./cancel/Cancel":"../node_modules/axios/lib/cancel/Cancel.js","./cancel/CancelToken":"../node_modules/axios/lib/cancel/CancelToken.js","./cancel/isCancel":"../node_modules/axios/lib/cancel/isCancel.js","./helpers/spread":"../node_modules/axios/lib/helpers/spread.js"}],"../node_modules/axios/index.js":[function(require,module,exports) {
 module.exports = require('./lib/axios');
-},{"./lib/axios":"../node_modules/axios/lib/axios.js"}],"js/models/Search.js":[function(require,module,exports) {
+},{"./lib/axios":"../node_modules/axios/lib/axios.js"}],"mock-data/queries-list.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.QUERIES_LIST = void 0;
+var QUERIES_LIST = ["carrot", "broccoli", "asparagus", "cauliflower", "corn", "cucumber", "green pepper", "lettuce", "mushrooms", "onion", "potato", "pumpkin", "red pepper", "tomato", "beetroot", "brussel sprouts", "peas", "zucchini", "radish", "sweet potato", "artichoke", "leek", "cabbage", "celery", "chili", "garlic", "basil", "coriander", "parsley", "dill", "rosemary", "oregano", "cinnamon", "saffron", "green bean", "bean", "chickpea", "lentil", "apple", "apricot", "avocado", "banana", "blackberry", "blackcurrant", "blueberry", "boysenberry", "cherry", "coconut", "fig", "grape", "grapefruit", "kiwifruit", "lemon", "lime", "lychee", "mandarin", "mango", "melon", "nectarine", "orange", "papaya", "passion fruit", "peach", "pear", "pineapple", "plum", "pomegranate", "quince", "raspberry", "strawberry", "watermelon", "salad", "pizza", "pasta", "popcorn", "lobster", "steak", "bbq", "pudding", "hamburger", "pie", "cake", "sausage", "tacos", "kebab", "poutine", "seafood", "chips", "fries", "masala", "paella", "som tam", "chicken", "toast", "marzipan", "tofu", "ketchup", "hummus", "chili", "maple syrup", "parma ham", "fajitas", "champ", "lasagna", "poke", "chocolate", "croissant", "arepas", "bunny chow", "pierogi", "donuts", "rendang", "sushi", "ice cream", "duck", "curry", "beef", "goat", "lamb", "turkey", "pork", "fish", "crab", "bacon", "ham", "pepperoni", "salami", "ribs"];
+exports.QUERIES_LIST = QUERIES_LIST;
+},{}],"js/models/Search.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -2676,37 +2785,78 @@ var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/cl
 
 var _axios = _interopRequireDefault(require("axios"));
 
+var _queriesList = require("../../mock-data/queries-list.js");
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var Search = function Search(query) {
+var Search = function Search() {
   var _this = this;
 
   (0, _classCallCheck2.default)(this, Search);
-  this.getRecipes = /*#__PURE__*/(0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee() {
-    var recipes;
-    return _regenerator.default.wrap(function _callee$(_context) {
-      while (1) {
-        switch (_context.prev = _context.next) {
-          case 0:
-            _context.next = 2;
-            return (0, _axios.default)("https://forkify-api.herokuapp.com/api/search?q=".concat(_this.query));
 
-          case 2:
-            recipes = _context.sent;
-            console.log(recipes);
+  this.getQueriesList = /*#__PURE__*/function () {
+    var _ref = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee(userInput) {
+      var listOfQueries, filteredListOfQueries;
+      return _regenerator.default.wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              _context.next = 2;
+              return new Promise(function (resolve, reject) {
+                resolve(_queriesList.QUERIES_LIST);
+              });
 
-          case 4:
-          case "end":
-            return _context.stop();
+            case 2:
+              listOfQueries = _context.sent;
+              filteredListOfQueries = listOfQueries.filter(function (query) {
+                return query.includes(userInput);
+              });
+              _this.queries = filteredListOfQueries;
+
+            case 5:
+            case "end":
+              return _context.stop();
+          }
         }
-      }
-    }, _callee);
-  }));
-  this.query = query;
+      }, _callee);
+    }));
+
+    return function (_x) {
+      return _ref.apply(this, arguments);
+    };
+  }();
+
+  this.getRecipesList = /*#__PURE__*/function () {
+    var _ref2 = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee2(query) {
+      var listOfRecipes;
+      return _regenerator.default.wrap(function _callee2$(_context2) {
+        while (1) {
+          switch (_context2.prev = _context2.next) {
+            case 0:
+              _this.query = query;
+              _context2.next = 3;
+              return (0, _axios.default)("https://forkify-api.herokuapp.com/api/search?q=".concat(_this.query));
+
+            case 3:
+              listOfRecipes = _context2.sent;
+              _this.recipes = listOfRecipes.data.recipes;
+
+            case 5:
+            case "end":
+              return _context2.stop();
+          }
+        }
+      }, _callee2);
+    }));
+
+    return function (_x2) {
+      return _ref2.apply(this, arguments);
+    };
+  }();
 };
 
 exports.default = Search;
-},{"@babel/runtime/regenerator":"../node_modules/@babel/runtime/regenerator/index.js","@babel/runtime/helpers/asyncToGenerator":"../node_modules/@babel/runtime/helpers/asyncToGenerator.js","@babel/runtime/helpers/classCallCheck":"../node_modules/@babel/runtime/helpers/classCallCheck.js","axios":"../node_modules/axios/index.js"}],"../node_modules/parcel-bundler/src/builtins/bundle-url.js":[function(require,module,exports) {
+},{"@babel/runtime/regenerator":"../node_modules/@babel/runtime/regenerator/index.js","@babel/runtime/helpers/asyncToGenerator":"../node_modules/@babel/runtime/helpers/asyncToGenerator.js","@babel/runtime/helpers/classCallCheck":"../node_modules/@babel/runtime/helpers/classCallCheck.js","axios":"../node_modules/axios/index.js","../../mock-data/queries-list.js":"mock-data/queries-list.js"}],"../node_modules/parcel-bundler/src/builtins/bundle-url.js":[function(require,module,exports) {
 var bundleURL = null;
 
 function getBundleURLCached() {
@@ -2781,15 +2931,66 @@ module.hot.accept(reloadCSS);
 },{"_css_loader":"../node_modules/parcel-bundler/src/builtins/css-loader.js"}],"js/index.js":[function(require,module,exports) {
 "use strict";
 
+var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
+
+var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
+
+var _search = require("./views/search");
+
 var _Search = _interopRequireDefault(require("./models/Search"));
 
 require("../styles/main.scss");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var search = new _Search.default('pizza');
-search.getRecipes();
-},{"./models/Search":"js/models/Search.js","../styles/main.scss":"styles/main.scss"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+/** Global State of the Application
+ * - Search Object
+ * - Recipe Object
+ * - Shopping List Object
+ * - Favourites Object
+ */
+var state = {};
+(0, _search.createAutoComplete)({
+  root: document.getElementById('recipe-search-input'),
+  placeholder: 'Enter query here',
+  fetchData: function () {
+    var _fetchData = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee(userInput) {
+      return _regenerator.default.wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              state.search = new _Search.default();
+              _context.next = 3;
+              return state.search.getQueriesList(userInput);
+
+            case 3:
+              return _context.abrupt("return", state.search.queries);
+
+            case 4:
+            case "end":
+              return _context.stop();
+          }
+        }
+      }, _callee);
+    }));
+
+    function fetchData(_x) {
+      return _fetchData.apply(this, arguments);
+    }
+
+    return fetchData;
+  }(),
+  renderItem: function renderItem(query) {
+    return "".concat(query);
+  },
+  onItemSelect: function onItemSelect(selectedQuery) {
+    state.search.getRecipesList(selectedQuery);
+  },
+  setInputValue: function setInputValue(query) {
+    return query;
+  }
+});
+},{"@babel/runtime/regenerator":"../node_modules/@babel/runtime/regenerator/index.js","@babel/runtime/helpers/asyncToGenerator":"../node_modules/@babel/runtime/helpers/asyncToGenerator.js","./views/search":"js/views/search.js","./models/Search":"js/models/Search.js","../styles/main.scss":"styles/main.scss"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;

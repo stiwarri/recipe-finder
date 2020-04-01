@@ -1,6 +1,100 @@
+/* Variables */
+/* General Styles */
+* {
+  margin: 0;
+  padding: 0;
+}
+
 body {
   background-color: lightgray;
   font-family: "Lato", sans-serif;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+a {
+  text-decoration: none;
+  color: #00034b;
+}
+
+ul {
+  list-style: none;
+}
+
+img {
+  display: inline-block;
+  width: 100%;
+}
+
+.container {
+  width: 80%;
+  margin: auto;
+  padding: 0 5rem;
+  overflow: hidden;
+}
+
+/* Header Styles */
+#app-header {
+  background-color: #00034b;
+  color: #e1a50f;
+  height: 72px;
+  margin-bottom: 1rem;
+  line-height: 72px;
+}
+#app-header .header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Main Section Styles */
+#app-main {
+  display: grid;
+  grid-template-areas: "left center center right";
+  justify-items: center;
+}
+#app-main #recipe-list-section {
+  grid-area: left;
+}
+#app-main #recipe-details-section {
+  grid-area: center;
+}
+#app-main #shopping-list-section {
+  grid-area: "right";
+}
+
+/* Auto complete Styles */
+.auto-complete {
+  width: 500px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+.auto-complete .search-bar input[type=text] {
+  width: 98%;
+  padding: 5px 5px;
+  border-radius: 5px;
+  border-color: #00034b;
+}
+.auto-complete .search-bar input[type=text]:hover {
+  border-color: #e1a50f;
+}
+.auto-complete .auto-complete-list {
+  width: 100%;
+  box-shadow: 2px 2px 4px #00034b;
+  position: absolute;
+  z-index: 101;
+  top: 30px;
+}
+.auto-complete .auto-complete-list .auto-complete-item {
+  border-bottom: 1px solid #00034b;
+  padding: 1rem;
+  color: #00034b;
+  font-weight: bold;
+  cursor: pointer;
+}
+.auto-complete .inactive-list {
+  display: none;
 }
 
 /*# sourceMappingURL=/js.00a46daa.css.map */

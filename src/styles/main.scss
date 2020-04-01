@@ -1,8 +1,113 @@
+/* Variables */
 $primary-color: rgb(225, 165, 15);
 $secondary-color: rgb(0, 3, 75);
 $background-color: lightgray;
 
+/* General Styles */
+* {
+    margin: 0;
+    padding: 0;
+}
+
 body {
     background-color: $background-color;
     font-family: 'Lato', sans-serif;
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+a {
+    text-decoration: none;
+    color: $secondary-color;
+}
+
+ul {
+    list-style: none;
+}
+
+img {
+    display: inline-block;
+    width: 100%;
+}
+
+.container {
+    width: 80%;
+    margin: auto;
+    padding: 0 5rem;
+    overflow: hidden;
+}
+
+/* Header Styles */
+#app-header {
+    background-color: $secondary-color;
+    color: $primary-color;
+    height: 72px;
+    margin-bottom: 1rem;
+    line-height: 72px;
+
+    .header-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center; 
+    }
+}
+
+/* Main Section Styles */
+#app-main {
+    display: grid;
+    grid-template-areas: "left center center right";
+    justify-items: center;
+
+    #recipe-list-section {
+        grid-area: left;
+    }
+
+    #recipe-details-section {
+        grid-area: center;
+    }
+
+    #shopping-list-section {
+        grid-area: "right";
+    }
+}
+
+/* Auto complete Styles */
+.auto-complete {
+    width: 500px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+
+    .search-bar {
+        input[type="text"] {
+            width: 98%;
+            padding: 5px 5px;
+            border-radius: 5px;
+            border-color: $secondary-color;
+        }
+    
+        input[type="text"]:hover {
+            border-color: $primary-color;
+        }
+    }
+    
+    .auto-complete-list {
+        width: 100%;
+        box-shadow: 2px 2px 4px $secondary-color;
+        position: absolute;
+        z-index: 101;
+        top: 30px;
+
+        .auto-complete-item {
+            border-bottom: 1px solid $secondary-color;
+            padding: 1rem;
+            color: $secondary-color;
+            font-weight: bold;
+            cursor: pointer;
+        }
+    }
+
+    .inactive-list {
+        display: none;
+    }
 }

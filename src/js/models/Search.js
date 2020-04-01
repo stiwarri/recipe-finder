@@ -1,16 +1,21 @@
 import axios from 'axios';
 
+import { QUERIES_LIST } from '../../mock-data/queries-list.js';
+
 export default class Search {
-    constructor(query) {
-        this.query = query;
+    constructor() { }
+
+    getQueriesList = async (userInput) => {
+        const listOfQueries = await new Promise((resolve, reject) => {
+            resolve(QUERIES_LIST);
+        });
+        const filteredListOfQueries = listOfQueries.filter(query => query.includes(userInput));
+        this.queries = filteredListOfQueries;
     }
 
-    getRecipes = async () => {
-        /* axios(`https://forkify-api.herokuapp.com/api/search?q=${this.query}`)
-            .then(data => console.log(data))
-            .catch(err => console.log(err)); */
-
-        const recipes = await axios(`https://forkify-api.herokuapp.com/api/search?q=${this.query}`);
-        console.log(recipes);
+    getRecipesList = async (query) => {
+        this.query = query;
+        const listOfRecipes = await axios(`https://forkify-api.herokuapp.com/api/search?q=${this.query}`);
+        this.recipes = listOfRecipes.data.recipes;
     }
 }
