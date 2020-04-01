@@ -1,0 +1,1 @@
+{"version":3,"sources":["styles\\main.scss"],"names":[],"mappings":"AAIA;EACI,kBAHe;EAIf","file":"js.00a46daa.css","sourceRoot":"..\\src","sourcesContent":["$primary-color: rgb(225, 165, 15);\r\n$secondary-color: rgb(0, 3, 75);\r\n$background-color: lightgray;\r\n\r\nbody {\r\n    background-color: $background-color;\r\n    font-family: 'Lato', sans-serif;\r\n}\r\n"]}
