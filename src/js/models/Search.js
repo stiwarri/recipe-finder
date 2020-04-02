@@ -1,9 +1,11 @@
 import axios from 'axios';
 
-import { QUERIES_LIST } from '../../mock-data/queries-list.js';
+import {
+    QUERIES_LIST
+} from '../../mock-data/queries-list.js';
 
 export default class Search {
-    constructor() { }
+    constructor() {}
 
     getQueriesList = async (userInput) => {
         const listOfQueries = await new Promise((resolve, reject) => {

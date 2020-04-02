@@ -1,7 +1,19 @@
-import { debounce, textLimiter } from '../utils';
-import { elements } from './base';
+import {
+    debounce,
+    textLimiter
+} from '../utils';
+import {
+    elements
+} from './base';
 
-export const createAutoComplete = ({ root, placeholder, fetchData, renderItem, onItemSelect, setInputValue }) => {
+export const createAutoComplete = ({
+    root,
+    placeholder,
+    fetchData,
+    renderItem,
+    onItemSelect,
+    setInputValue
+}) => {
     root.innerHTML = `
         <div class="search-bar">
             <input type="text" placeholder="${placeholder}">
@@ -35,8 +47,12 @@ export const createAutoComplete = ({ root, placeholder, fetchData, renderItem, o
     input.addEventListener('input', debounce(inputChangeHandler, 500));
 }
 
-export const renderRecipes = recipes => {
-    recipes.forEach(recipe => {
+export const renderRecipes = (recipes, curPage, recipesPerPage) => {
+    const start = curPage - 1;
+    const end = start + recipesPerPage;
+    const totPages = Math.ceil(recipes.length / recipesPerPage);
+
+    recipes.slice(start, end).forEach(recipe => {
         elements.recipeItems.insertAdjacentHTML('beforeend',
             `<li class="recipe-item">
                 <a href="#${recipe.id}">
@@ -53,6 +69,27 @@ export const renderRecipes = recipes => {
             </li>`
         );
     });
+
+    elements.recipeItems.insertAdjacentHTML('afterend', `<div class="pagination-buttons">
+        ${createPageNavigationButtons(curPage, totPages)}
+    </div>`);
+}
+
+const createPageNavigationButtons = (curPage, totPage) => {
+    if (curPage === 1) {
+        return `
+            <div class="next">Next >></div>
+        `;
+    } else if (curPage === totPage) {
+        return `
+            <div class="prev"><< Prev</div>
+        `;
+    } else {
+        return `
+            <div class="next">Next >></div>
+            <div class="prev"><< Prev</div>
+        `;
+    }
 }
 
 export const clearRecipes = () => {

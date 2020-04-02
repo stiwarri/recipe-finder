@@ -1,5 +1,8 @@
 import * as searchView from './views/search';
-import { elements } from './views/base';
+import * as utils from './utils';
+import {
+    elements
+} from './views/base';
 import Search from './models/Search';
 import '../styles/main.scss';
 
@@ -23,9 +26,11 @@ searchView.createAutoComplete({
         return `${query}`;
     },
     onItemSelect: async selectedQuery => {
-        await state.search.getRecipesList(selectedQuery);
         searchView.clearRecipes();
-        searchView.renderRecipes(state.search.recipes);
+        utils.showLoader(elements.recipeListSection);
+        await state.search.getRecipesList(selectedQuery);
+        utils.hideLoader(elements.recipeListSection);
+        searchView.renderRecipes(state.search.recipes, 1, 5);
     },
     setInputValue: query => {
         return query;
@@ -34,7 +39,6 @@ searchView.createAutoComplete({
 
 const onDocumentClickHandler = (event) => {
     const autoCompletes = elements.autoCompletes;
-    console.log(autoCompletes);
     for (let autoComplete of autoCompletes) {
         if (!autoComplete.contains(event.target)) {
             autoComplete.querySelector('.auto-complete-list').classList.add('inactive');

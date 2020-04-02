@@ -24,3 +24,15 @@ export const textLimiter = (text, limit = 20) => {
     }
     return text;
 }
+
+export const showLoader = targetEl => {
+    const loader = `
+        <div class="loader"></div>
+    `;
+    targetEl.insertAdjacentHTML('afterbegin', loader);
+}
+
+export const hideLoader = targetEl => {
+    const loader = targetEl.querySelector('.loader');
+    targetEl.removeChild(loader);
+}

@@ -895,7 +895,7 @@ module.exports = _asyncToGenerator;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.textLimiter = exports.debounce = void 0;
+exports.hideLoader = exports.showLoader = exports.textLimiter = exports.debounce = void 0;
 
 var debounce = function debounce(func) {
   var delay = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1000;
@@ -936,6 +936,20 @@ var textLimiter = function textLimiter(text) {
 };
 
 exports.textLimiter = textLimiter;
+
+var showLoader = function showLoader(targetEl) {
+  var loader = "\n        <div class=\"loader\"></div>\n    ";
+  targetEl.insertAdjacentHTML('afterbegin', loader);
+};
+
+exports.showLoader = showLoader;
+
+var hideLoader = function hideLoader(targetEl) {
+  var loader = targetEl.querySelector('.loader');
+  targetEl.removeChild(loader);
+};
+
+exports.hideLoader = hideLoader;
 },{}],"js/views/base.js":[function(require,module,exports) {
 "use strict";
 
@@ -1027,13 +1041,28 @@ var createAutoComplete = function createAutoComplete(_ref) {
 
 exports.createAutoComplete = createAutoComplete;
 
-var renderRecipes = function renderRecipes(recipes) {
-  recipes.forEach(function (recipe) {
+var renderRecipes = function renderRecipes(recipes, curPage, recipesPerPage) {
+  var start = curPage - 1;
+  var end = start + recipesPerPage;
+  var totPages = Math.ceil(recipes.length / recipesPerPage);
+  recipes.slice(start, end).forEach(function (recipe) {
     _base.elements.recipeItems.insertAdjacentHTML('beforeend', "<li class=\"recipe-item\">\n                <a href=\"#".concat(recipe.id, "\">\n                    <div class=\"figure\">\n                        <div class=\"recipe-image\">\n                            <img src=\"").concat(recipe.image_url, "\" alt=\"image\">\n                        </div>\n                        <div class=\"recipe-brief\">\n                            <h5 class=\"recipe-title\">").concat((0, _utils.textLimiter)(recipe.title, 30), "</h5>\n                            <p class=\"recipe-publisher\">").concat(recipe.publisher, "</p>\n                        </div>\n                    </div>\n                </a>\n            </li>"));
   });
+
+  _base.elements.recipeItems.insertAdjacentHTML('afterend', "<div class=\"pagination-buttons\">\n        ".concat(createPageNavigationButtons(curPage, totPages), "\n    </div>"));
 };
 
 exports.renderRecipes = renderRecipes;
+
+var createPageNavigationButtons = function createPageNavigationButtons(curPage, totPage) {
+  if (curPage === 1) {
+    return "\n            <div class=\"next\">Next >></div>\n        ";
+  } else if (curPage === totPage) {
+    return "\n            <div class=\"prev\"><< Prev</div>\n        ";
+  } else {
+    return "\n            <div class=\"next\">Next >></div>\n            <div class=\"prev\"><< Prev</div>\n        ";
+  }
+};
 
 var clearRecipes = function clearRecipes() {
   while (_base.elements.recipeItems.firstChild) {
@@ -2990,6 +3019,8 @@ var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/
 
 var searchView = _interopRequireWildcard(require("./views/search"));
 
+var utils = _interopRequireWildcard(require("./utils"));
+
 var _base = require("./views/base");
 
 var _Search = _interopRequireDefault(require("./models/Search"));
@@ -3054,14 +3085,16 @@ searchView.createAutoComplete({
         while (1) {
           switch (_context2.prev = _context2.next) {
             case 0:
-              _context2.next = 2;
+              searchView.clearRecipes();
+              utils.showLoader(_base.elements.recipeListSection);
+              _context2.next = 4;
               return state.search.getRecipesList(selectedQuery);
 
-            case 2:
-              searchView.clearRecipes();
-              searchView.renderRecipes(state.search.recipes);
-
             case 4:
+              utils.hideLoader(_base.elements.recipeListSection);
+              searchView.renderRecipes(state.search.recipes, 1, 5);
+
+            case 6:
             case "end":
               return _context2.stop();
           }
@@ -3082,7 +3115,6 @@ searchView.createAutoComplete({
 
 var onDocumentClickHandler = function onDocumentClickHandler(event) {
   var autoCompletes = _base.elements.autoCompletes;
-  console.log(autoCompletes);
 
   var _iterator = _createForOfIteratorHelper(autoCompletes),
       _step;
@@ -3103,7 +3135,7 @@ var onDocumentClickHandler = function onDocumentClickHandler(event) {
 };
 
 document.addEventListener('click', onDocumentClickHandler);
-},{"@babel/runtime/regenerator":"../node_modules/@babel/runtime/regenerator/index.js","@babel/runtime/helpers/asyncToGenerator":"../node_modules/@babel/runtime/helpers/asyncToGenerator.js","./views/search":"js/views/search.js","./views/base":"js/views/base.js","./models/Search":"js/models/Search.js","../styles/main.scss":"styles/main.scss"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"@babel/runtime/regenerator":"../node_modules/@babel/runtime/regenerator/index.js","@babel/runtime/helpers/asyncToGenerator":"../node_modules/@babel/runtime/helpers/asyncToGenerator.js","./views/search":"js/views/search.js","./utils":"js/utils.js","./views/base":"js/views/base.js","./models/Search":"js/models/Search.js","../styles/main.scss":"styles/main.scss"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -3131,7 +3163,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "57499" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "64065" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
