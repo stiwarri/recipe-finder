@@ -895,7 +895,7 @@ module.exports = _asyncToGenerator;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.debounce = void 0;
+exports.textLimiter = exports.debounce = void 0;
 
 var debounce = function debounce(func) {
   var delay = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1000;
@@ -916,19 +916,55 @@ var debounce = function debounce(func) {
 };
 
 exports.debounce = debounce;
+
+var textLimiter = function textLimiter(text) {
+  var limit = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 20;
+
+  if (text.length > limit) {
+    var newArr = [];
+    text.split(' ').reduce(function (acc, cur) {
+      if (acc + cur.length <= limit) {
+        newArr.push(cur);
+      }
+
+      return acc + cur.length;
+    }, 0);
+    return "".concat(newArr.join(' '), " ...");
+  }
+
+  return text;
+};
+
+exports.textLimiter = textLimiter;
+},{}],"js/views/base.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.elements = void 0;
+var elements = {
+  recipeListSection: document.getElementById('recipe-list-section'),
+  recipeSearchInput: document.getElementById('recipe-search-input'),
+  recipeItems: document.querySelector('.recipe-items'),
+  autoCompletes: document.querySelectorAll('.auto-complete')
+};
+exports.elements = elements;
 },{}],"js/views/search.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.createAutoComplete = void 0;
+exports.clearRecipes = exports.renderRecipes = exports.createAutoComplete = void 0;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
 var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
 
 var _utils = require("../utils");
+
+var _base = require("./base");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -939,7 +975,7 @@ var createAutoComplete = function createAutoComplete(_ref) {
       renderItem = _ref.renderItem,
       onItemSelect = _ref.onItemSelect,
       setInputValue = _ref.setInputValue;
-  root.innerHTML = "\n        <div class=\"search-bar\">\n            <input type=\"text\" placeholder=\"".concat(placeholder, "\">\n        </div>\n        <div class=\"auto-complete-list inactive-list\"></div>\n    ");
+  root.innerHTML = "\n        <div class=\"search-bar\">\n            <input type=\"text\" placeholder=\"".concat(placeholder, "\">\n        </div>\n        <div class=\"auto-complete-list inactive\"></div>\n    ");
   var input = root.querySelector('input');
 
   var inputChangeHandler = /*#__PURE__*/function () {
@@ -954,8 +990,8 @@ var createAutoComplete = function createAutoComplete(_ref) {
 
             case 2:
               items = _context.sent;
-              autoCompleteList = document.querySelector('.auto-complete-list');
-              autoCompleteList.classList.remove('inactive-list');
+              autoCompleteList = root.querySelector('.auto-complete-list');
+              autoCompleteList.classList.remove('inactive');
 
               while (autoCompleteList.firstChild) {
                 autoCompleteList.removeChild(autoCompleteList.lastChild);
@@ -966,6 +1002,7 @@ var createAutoComplete = function createAutoComplete(_ref) {
                 autoCompleteItem.classList.add('auto-complete-item');
                 autoCompleteItem.innerHTML = renderItem(item);
                 autoCompleteItem.addEventListener('click', function () {
+                  autoCompleteList.classList.add('inactive');
                   input.value = setInputValue(item);
                   onItemSelect(item);
                 });
@@ -989,7 +1026,23 @@ var createAutoComplete = function createAutoComplete(_ref) {
 };
 
 exports.createAutoComplete = createAutoComplete;
-},{"@babel/runtime/regenerator":"../node_modules/@babel/runtime/regenerator/index.js","@babel/runtime/helpers/asyncToGenerator":"../node_modules/@babel/runtime/helpers/asyncToGenerator.js","../utils":"js/utils.js"}],"../node_modules/@babel/runtime/helpers/classCallCheck.js":[function(require,module,exports) {
+
+var renderRecipes = function renderRecipes(recipes) {
+  recipes.forEach(function (recipe) {
+    _base.elements.recipeItems.insertAdjacentHTML('beforeend', "<li class=\"recipe-item\">\n                <a href=\"#".concat(recipe.id, "\">\n                    <div class=\"figure\">\n                        <div class=\"recipe-image\">\n                            <img src=\"").concat(recipe.image_url, "\" alt=\"image\">\n                        </div>\n                        <div class=\"recipe-brief\">\n                            <h5 class=\"recipe-title\">").concat((0, _utils.textLimiter)(recipe.title, 30), "</h5>\n                            <p class=\"recipe-publisher\">").concat(recipe.publisher, "</p>\n                        </div>\n                    </div>\n                </a>\n            </li>"));
+  });
+};
+
+exports.renderRecipes = renderRecipes;
+
+var clearRecipes = function clearRecipes() {
+  while (_base.elements.recipeItems.firstChild) {
+    _base.elements.recipeItems.removeChild(_base.elements.recipeItems.lastChild);
+  }
+};
+
+exports.clearRecipes = clearRecipes;
+},{"@babel/runtime/regenerator":"../node_modules/@babel/runtime/regenerator/index.js","@babel/runtime/helpers/asyncToGenerator":"../node_modules/@babel/runtime/helpers/asyncToGenerator.js","../utils":"js/utils.js","./base":"js/views/base.js"}],"../node_modules/@babel/runtime/helpers/classCallCheck.js":[function(require,module,exports) {
 function _classCallCheck(instance, Constructor) {
   if (!(instance instanceof Constructor)) {
     throw new TypeError("Cannot call a class as a function");
@@ -2935,13 +2988,25 @@ var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"))
 
 var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
 
-var _search = require("./views/search");
+var searchView = _interopRequireWildcard(require("./views/search"));
+
+var _base = require("./views/base");
 
 var _Search = _interopRequireDefault(require("./models/Search"));
 
 require("../styles/main.scss");
 
+function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _createForOfIteratorHelper(o) { if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (o = _unsupportedIterableToArray(o))) { var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var it, normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(n); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
 /** Global State of the Application
  * - Search Object
@@ -2950,9 +3015,9 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  * - Favourites Object
  */
 var state = {};
-(0, _search.createAutoComplete)({
-  root: document.getElementById('recipe-search-input'),
-  placeholder: 'Enter query here',
+searchView.createAutoComplete({
+  root: _base.elements.recipeSearchInput,
+  placeholder: 'Start searching for your favourite recipe here...',
   fetchData: function () {
     var _fetchData = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee(userInput) {
       return _regenerator.default.wrap(function _callee$(_context) {
@@ -2983,14 +3048,62 @@ var state = {};
   renderItem: function renderItem(query) {
     return "".concat(query);
   },
-  onItemSelect: function onItemSelect(selectedQuery) {
-    state.search.getRecipesList(selectedQuery);
-  },
+  onItemSelect: function () {
+    var _onItemSelect = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee2(selectedQuery) {
+      return _regenerator.default.wrap(function _callee2$(_context2) {
+        while (1) {
+          switch (_context2.prev = _context2.next) {
+            case 0:
+              _context2.next = 2;
+              return state.search.getRecipesList(selectedQuery);
+
+            case 2:
+              searchView.clearRecipes();
+              searchView.renderRecipes(state.search.recipes);
+
+            case 4:
+            case "end":
+              return _context2.stop();
+          }
+        }
+      }, _callee2);
+    }));
+
+    function onItemSelect(_x2) {
+      return _onItemSelect.apply(this, arguments);
+    }
+
+    return onItemSelect;
+  }(),
   setInputValue: function setInputValue(query) {
     return query;
   }
 });
-},{"@babel/runtime/regenerator":"../node_modules/@babel/runtime/regenerator/index.js","@babel/runtime/helpers/asyncToGenerator":"../node_modules/@babel/runtime/helpers/asyncToGenerator.js","./views/search":"js/views/search.js","./models/Search":"js/models/Search.js","../styles/main.scss":"styles/main.scss"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+
+var onDocumentClickHandler = function onDocumentClickHandler(event) {
+  var autoCompletes = _base.elements.autoCompletes;
+  console.log(autoCompletes);
+
+  var _iterator = _createForOfIteratorHelper(autoCompletes),
+      _step;
+
+  try {
+    for (_iterator.s(); !(_step = _iterator.n()).done;) {
+      var autoComplete = _step.value;
+
+      if (!autoComplete.contains(event.target)) {
+        autoComplete.querySelector('.auto-complete-list').classList.add('inactive');
+      }
+    }
+  } catch (err) {
+    _iterator.e(err);
+  } finally {
+    _iterator.f();
+  }
+};
+
+document.addEventListener('click', onDocumentClickHandler);
+},{"@babel/runtime/regenerator":"../node_modules/@babel/runtime/regenerator/index.js","@babel/runtime/helpers/asyncToGenerator":"../node_modules/@babel/runtime/helpers/asyncToGenerator.js","./views/search":"js/views/search.js","./views/base":"js/views/base.js","./models/Search":"js/models/Search.js","../styles/main.scss":"styles/main.scss"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;

@@ -14,6 +14,7 @@ body {
     font-family: 'Lato', sans-serif;
     line-height: 1.6;
     overflow-x: hidden;
+    box-sizing: border-box;
 }
 
 a {
@@ -37,12 +38,18 @@ img {
     overflow: hidden;
 }
 
+input:focus,
+select:focus,
+textarea:focus,
+button:focus {
+    outline: none;
+}
+
 /* Header Styles */
 #app-header {
     background-color: $secondary-color;
     color: $primary-color;
     height: 72px;
-    margin-bottom: 1rem;
     line-height: 72px;
 
     .header-content {
@@ -55,25 +62,59 @@ img {
 /* Main Section Styles */
 #app-main {
     display: grid;
-    grid-template-areas: "left center center right";
+    grid-template-columns: repeat(4, [column-start] 25% [column-end]);
     justify-items: center;
 
     #recipe-list-section {
-        grid-area: left;
+        grid-column: column-start 1 / column-end 1;
+        padding: 1rem;
+        background-color: $primary-color;
+        width: 100%;
+        height: calc(100vh - 104px);
+        overflow-x: hidden;
+
+        .section-title {
+            text-align: center;
+        }
+
+        .recipe-items {
+            color: $secondary-color;
+
+            .recipe-item {
+                padding: 1rem 1rem;
+
+                &:hover {
+                    background-color: white;
+                }
+            }
+
+            .figure {
+                display: flex;
+                align-items: center;
+
+                .recipe-image img {
+                    width: 50px;
+                    height: 50px;
+                    margin: 0 1rem 0 0;
+                }
+            }
+        }
     }
 
     #recipe-details-section {
-        grid-area: center;
+        grid-column: column-start 2 / column-end 3;
+        padding: 1rem;
     }
 
     #shopping-list-section {
-        grid-area: "right";
+        grid-column: column-start 4 / column-end 4;
+        padding: 1rem;
     }
 }
 
 /* Auto complete Styles */
 .auto-complete {
-    width: 500px;
+    width: 400px;
     display: flex;
     flex-direction: column;
     position: relative;
@@ -86,28 +127,35 @@ img {
             border-color: $secondary-color;
         }
     
-        input[type="text"]:hover {
-            border-color: $primary-color;
+        input[type="text"]:hover, input[type="text"]:focus {
+            border: 2px solid $primary-color;
         }
     }
     
     .auto-complete-list {
         width: 100%;
-        box-shadow: 2px 2px 4px $secondary-color;
+        max-height: 400px;
+        overflow-y: scroll;
+        box-shadow: 2px 2px 4px $primary-color;
+        background-color: $primary-color;
         position: absolute;
         z-index: 101;
         top: 30px;
 
         .auto-complete-item {
-            border-bottom: 1px solid $secondary-color;
+            border-bottom: 2px solid $secondary-color;
             padding: 1rem;
             color: $secondary-color;
             font-weight: bold;
             cursor: pointer;
+
+            &:hover {
+                background-color: white;
+            }
         }
     }
+}
 
-    .inactive-list {
-        display: none;
-    }
+.inactive {
+    display: none;
 }

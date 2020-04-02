@@ -1,4 +1,5 @@
-import { createAutoComplete } from './views/search';
+import * as searchView from './views/search';
+import { elements } from './views/base';
 import Search from './models/Search';
 import '../styles/main.scss';
 
@@ -10,21 +11,35 @@ import '../styles/main.scss';
  */
 const state = {};
 
-createAutoComplete({
-    root: document.getElementById('recipe-search-input'),
-    placeholder: 'Enter query here',
-    fetchData: async (userInput) => {
+searchView.createAutoComplete({
+    root: elements.recipeSearchInput,
+    placeholder: 'Start searching for your favourite recipe here...',
+    fetchData: async userInput => {
         state.search = new Search();
         await state.search.getQueriesList(userInput);
         return state.search.queries;
     },
-    renderItem: (query) => {
+    renderItem: query => {
         return `${query}`;
     },
-    onItemSelect: (selectedQuery) => {
-        state.search.getRecipesList(selectedQuery);
+    onItemSelect: async selectedQuery => {
+        await state.search.getRecipesList(selectedQuery);
+        searchView.clearRecipes();
+        searchView.renderRecipes(state.search.recipes);
     },
-    setInputValue: (query) => {
+    setInputValue: query => {
         return query;
     }
 });
+
+const onDocumentClickHandler = (event) => {
+    const autoCompletes = elements.autoCompletes;
+    console.log(autoCompletes);
+    for (let autoComplete of autoCompletes) {
+        if (!autoComplete.contains(event.target)) {
+            autoComplete.querySelector('.auto-complete-list').classList.add('inactive');
+        }
+    }
+}
+
+document.addEventListener('click', onDocumentClickHandler);

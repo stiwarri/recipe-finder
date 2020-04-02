@@ -10,6 +10,7 @@ body {
   font-family: "Lato", sans-serif;
   line-height: 1.6;
   overflow-x: hidden;
+  box-sizing: border-box;
 }
 
 a {
@@ -33,12 +34,18 @@ img {
   overflow: hidden;
 }
 
+input:focus,
+select:focus,
+textarea:focus,
+button:focus {
+  outline: none;
+}
+
 /* Header Styles */
 #app-header {
   background-color: #00034b;
   color: #e1a50f;
   height: 72px;
-  margin-bottom: 1rem;
   line-height: 72px;
 }
 #app-header .header-content {
@@ -50,22 +57,50 @@ img {
 /* Main Section Styles */
 #app-main {
   display: grid;
-  grid-template-areas: "left center center right";
+  grid-template-columns: repeat(4, [column-start] 25% [column-end]);
   justify-items: center;
 }
 #app-main #recipe-list-section {
-  grid-area: left;
+  grid-column: column-start 1/column-end 1;
+  padding: 1rem;
+  background-color: #e1a50f;
+  width: 100%;
+  height: calc(100vh - 104px);
+  overflow-x: hidden;
+}
+#app-main #recipe-list-section .section-title {
+  text-align: center;
+}
+#app-main #recipe-list-section .recipe-items {
+  color: #00034b;
+}
+#app-main #recipe-list-section .recipe-items .recipe-item {
+  padding: 1rem 1rem;
+}
+#app-main #recipe-list-section .recipe-items .recipe-item:hover {
+  background-color: white;
+}
+#app-main #recipe-list-section .recipe-items .figure {
+  display: flex;
+  align-items: center;
+}
+#app-main #recipe-list-section .recipe-items .figure .recipe-image img {
+  width: 50px;
+  height: 50px;
+  margin: 0 1rem 0 0;
 }
 #app-main #recipe-details-section {
-  grid-area: center;
+  grid-column: column-start 2/column-end 3;
+  padding: 1rem;
 }
 #app-main #shopping-list-section {
-  grid-area: "right";
+  grid-column: column-start 4/column-end 4;
+  padding: 1rem;
 }
 
 /* Auto complete Styles */
 .auto-complete {
-  width: 500px;
+  width: 400px;
   display: flex;
   flex-direction: column;
   position: relative;
@@ -76,24 +111,31 @@ img {
   border-radius: 5px;
   border-color: #00034b;
 }
-.auto-complete .search-bar input[type=text]:hover {
-  border-color: #e1a50f;
+.auto-complete .search-bar input[type=text]:hover, .auto-complete .search-bar input[type=text]:focus {
+  border: 2px solid #e1a50f;
 }
 .auto-complete .auto-complete-list {
   width: 100%;
-  box-shadow: 2px 2px 4px #00034b;
+  max-height: 400px;
+  overflow-y: scroll;
+  box-shadow: 2px 2px 4px #e1a50f;
+  background-color: #e1a50f;
   position: absolute;
   z-index: 101;
   top: 30px;
 }
 .auto-complete .auto-complete-list .auto-complete-item {
-  border-bottom: 1px solid #00034b;
+  border-bottom: 2px solid #00034b;
   padding: 1rem;
   color: #00034b;
   font-weight: bold;
   cursor: pointer;
 }
-.auto-complete .inactive-list {
+.auto-complete .auto-complete-list .auto-complete-item:hover {
+  background-color: white;
+}
+
+.inactive {
   display: none;
 }
 
