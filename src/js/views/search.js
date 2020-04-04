@@ -1,54 +1,12 @@
 import {
-    debounce,
-    textLimiter
+    elements,
+    textLimiter,
+    createPageNavigationButtons,
+    selectors
 } from '../utils';
-import {
-    elements
-} from './base';
 
-export const createAutoComplete = ({
-    root,
-    placeholder,
-    fetchData,
-    renderItem,
-    onItemSelect,
-    setInputValue
-}) => {
-    root.innerHTML = `
-        <div class="search-bar">
-            <input type="text" placeholder="${placeholder}">
-        </div>
-        <div class="auto-complete-list inactive"></div>
-    `;
-
-    const input = root.querySelector('input');
-
-    const inputChangeHandler = async (event) => {
-        const items = await fetchData(event.target.value);
-        const autoCompleteList = root.querySelector('.auto-complete-list');
-        autoCompleteList.classList.remove('inactive');
-        while (autoCompleteList.firstChild) {
-            autoCompleteList.removeChild(autoCompleteList.lastChild);
-        }
-
-        Array.from(items).forEach(item => {
-            const autoCompleteItem = document.createElement('div');
-            autoCompleteItem.classList.add('auto-complete-item');
-            autoCompleteItem.innerHTML = renderItem(item);
-            autoCompleteItem.addEventListener('click', () => {
-                autoCompleteList.classList.add('inactive');
-                input.value = setInputValue(item);
-                onItemSelect(item);
-            });
-            autoCompleteList.appendChild(autoCompleteItem);
-        });
-    }
-
-    input.addEventListener('input', debounce(inputChangeHandler, 500));
-}
-
-export const renderRecipes = (recipes, curPage, recipesPerPage) => {
-    const start = curPage - 1;
+export const renderRecipes = (recipes, curPage, recipesPerPage = 10) => {
+    const start = (curPage - 1) * recipesPerPage;
     const end = start + recipesPerPage;
     const totPages = Math.ceil(recipes.length / recipesPerPage);
 
@@ -75,25 +33,15 @@ export const renderRecipes = (recipes, curPage, recipesPerPage) => {
     </div>`);
 }
 
-const createPageNavigationButtons = (curPage, totPage) => {
-    if (curPage === 1) {
-        return `
-            <div class="next">Next >></div>
-        `;
-    } else if (curPage === totPage) {
-        return `
-            <div class="prev"><< Prev</div>
-        `;
-    } else {
-        return `
-            <div class="next">Next >></div>
-            <div class="prev"><< Prev</div>
-        `;
-    }
-}
-
 export const clearRecipes = () => {
     while (elements.recipeItems.firstChild) {
         elements.recipeItems.removeChild(elements.recipeItems.lastChild);
     }
+}
+
+export const clearPaginationButtons = () => {
+    let recipeListSection = elements.recipeListSection;
+
+    if (elements.recipeListSection.querySelector(selectors.paginationButtons))
+        elements.recipeListSection.removeChild(recipeListSection.querySelector(selectors.paginationButtons));
 }

@@ -895,7 +895,88 @@ module.exports = _asyncToGenerator;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.hideLoader = exports.showLoader = exports.textLimiter = exports.debounce = void 0;
+exports.createPageNavigationButtons = exports.hideLoader = exports.showLoader = exports.textLimiter = exports.debounce = exports.createAutoComplete = exports.selectors = exports.elements = void 0;
+
+var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
+
+var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var elements = {
+  recipeListSection: document.getElementById('recipe-list-section'),
+  recipeSearchInput: document.getElementById('recipe-search-input'),
+  recipeItems: document.querySelector('.recipe-items'),
+  autoCompletes: document.querySelectorAll('.auto-complete')
+};
+exports.elements = elements;
+var selectors = {
+  input: 'input',
+  autoCompleteList: '.auto-complete-list',
+  paginationButtons: '.pagination-buttons',
+  nextPaginationButton: '.next-page-nav-button',
+  prevPaginationButton: '.prev-page-nav-button'
+};
+exports.selectors = selectors;
+
+var createAutoComplete = function createAutoComplete(_ref) {
+  var root = _ref.root,
+      placeholder = _ref.placeholder,
+      fetchData = _ref.fetchData,
+      renderItem = _ref.renderItem,
+      onItemSelect = _ref.onItemSelect,
+      setInputValue = _ref.setInputValue;
+  root.innerHTML = "\n        <div class=\"search-bar\">\n            <input type=\"text\" placeholder=\"".concat(placeholder, "\">\n        </div>\n        <div class=\"auto-complete-list inactive\"></div>\n    ");
+  var input = root.querySelector(selectors.input);
+
+  var inputChangeHandler = /*#__PURE__*/function () {
+    var _ref2 = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee(event) {
+      var items, autoCompleteList;
+      return _regenerator.default.wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              _context.next = 2;
+              return fetchData(event.target.value);
+
+            case 2:
+              items = _context.sent;
+              autoCompleteList = root.querySelector(selectors.autoCompleteList);
+              autoCompleteList.classList.remove('inactive');
+
+              while (autoCompleteList.firstChild) {
+                autoCompleteList.removeChild(autoCompleteList.lastChild);
+              }
+
+              Array.from(items).forEach(function (item) {
+                var autoCompleteItem = document.createElement('div');
+                autoCompleteItem.classList.add('auto-complete-item');
+                autoCompleteItem.innerHTML = renderItem(item);
+                autoCompleteItem.addEventListener('click', function () {
+                  autoCompleteList.classList.add('inactive');
+                  input.value = setInputValue(item);
+                  onItemSelect(item);
+                });
+                autoCompleteList.appendChild(autoCompleteItem);
+              });
+
+            case 7:
+            case "end":
+              return _context.stop();
+          }
+        }
+      }, _callee);
+    }));
+
+    return function inputChangeHandler(_x) {
+      return _ref2.apply(this, arguments);
+    };
+  }();
+
+  input.addEventListener('input', debounce(inputChangeHandler, 500));
+};
+
+exports.createAutoComplete = createAutoComplete;
 
 var debounce = function debounce(func) {
   var delay = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1000;
@@ -950,128 +1031,57 @@ var hideLoader = function hideLoader(targetEl) {
 };
 
 exports.hideLoader = hideLoader;
-},{}],"js/views/base.js":[function(require,module,exports) {
-"use strict";
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.elements = void 0;
-var elements = {
-  recipeListSection: document.getElementById('recipe-list-section'),
-  recipeSearchInput: document.getElementById('recipe-search-input'),
-  recipeItems: document.querySelector('.recipe-items'),
-  autoCompletes: document.querySelectorAll('.auto-complete')
+var createPageNavigationButtons = function createPageNavigationButtons(curPage, totPage) {
+  if (curPage === 1) {
+    return "\n            <div class=\"next-page-nav-button next\" data-goto=\"".concat(curPage + 1, "\">Next >></div>\n        ");
+  } else if (curPage === totPage) {
+    return "\n            <div class=\"prev-page-nav-button prev\" data-goto=\"".concat(curPage - 1, "\"><< Prev</div>\n        ");
+  } else {
+    return "\n            <div class=\"next-page-nav-button next\" data-goto=\"".concat(curPage + 1, "\">Next >></div>\n            <div class=\"prev-page-nav-button prev\" data-goto=\"").concat(curPage - 1, "\"><< Prev</div>\n        ");
+  }
 };
-exports.elements = elements;
-},{}],"js/views/search.js":[function(require,module,exports) {
+
+exports.createPageNavigationButtons = createPageNavigationButtons;
+},{"@babel/runtime/regenerator":"../node_modules/@babel/runtime/regenerator/index.js","@babel/runtime/helpers/asyncToGenerator":"../node_modules/@babel/runtime/helpers/asyncToGenerator.js"}],"js/views/search.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.clearRecipes = exports.renderRecipes = exports.createAutoComplete = void 0;
-
-var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
-
-var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
+exports.clearPaginationButtons = exports.clearRecipes = exports.renderRecipes = void 0;
 
 var _utils = require("../utils");
 
-var _base = require("./base");
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var createAutoComplete = function createAutoComplete(_ref) {
-  var root = _ref.root,
-      placeholder = _ref.placeholder,
-      fetchData = _ref.fetchData,
-      renderItem = _ref.renderItem,
-      onItemSelect = _ref.onItemSelect,
-      setInputValue = _ref.setInputValue;
-  root.innerHTML = "\n        <div class=\"search-bar\">\n            <input type=\"text\" placeholder=\"".concat(placeholder, "\">\n        </div>\n        <div class=\"auto-complete-list inactive\"></div>\n    ");
-  var input = root.querySelector('input');
-
-  var inputChangeHandler = /*#__PURE__*/function () {
-    var _ref2 = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee(event) {
-      var items, autoCompleteList;
-      return _regenerator.default.wrap(function _callee$(_context) {
-        while (1) {
-          switch (_context.prev = _context.next) {
-            case 0:
-              _context.next = 2;
-              return fetchData(event.target.value);
-
-            case 2:
-              items = _context.sent;
-              autoCompleteList = root.querySelector('.auto-complete-list');
-              autoCompleteList.classList.remove('inactive');
-
-              while (autoCompleteList.firstChild) {
-                autoCompleteList.removeChild(autoCompleteList.lastChild);
-              }
-
-              Array.from(items).forEach(function (item) {
-                var autoCompleteItem = document.createElement('div');
-                autoCompleteItem.classList.add('auto-complete-item');
-                autoCompleteItem.innerHTML = renderItem(item);
-                autoCompleteItem.addEventListener('click', function () {
-                  autoCompleteList.classList.add('inactive');
-                  input.value = setInputValue(item);
-                  onItemSelect(item);
-                });
-                autoCompleteList.appendChild(autoCompleteItem);
-              });
-
-            case 7:
-            case "end":
-              return _context.stop();
-          }
-        }
-      }, _callee);
-    }));
-
-    return function inputChangeHandler(_x) {
-      return _ref2.apply(this, arguments);
-    };
-  }();
-
-  input.addEventListener('input', (0, _utils.debounce)(inputChangeHandler, 500));
-};
-
-exports.createAutoComplete = createAutoComplete;
-
-var renderRecipes = function renderRecipes(recipes, curPage, recipesPerPage) {
-  var start = curPage - 1;
+var renderRecipes = function renderRecipes(recipes, curPage) {
+  var recipesPerPage = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 10;
+  var start = (curPage - 1) * recipesPerPage;
   var end = start + recipesPerPage;
   var totPages = Math.ceil(recipes.length / recipesPerPage);
   recipes.slice(start, end).forEach(function (recipe) {
-    _base.elements.recipeItems.insertAdjacentHTML('beforeend', "<li class=\"recipe-item\">\n                <a href=\"#".concat(recipe.id, "\">\n                    <div class=\"figure\">\n                        <div class=\"recipe-image\">\n                            <img src=\"").concat(recipe.image_url, "\" alt=\"image\">\n                        </div>\n                        <div class=\"recipe-brief\">\n                            <h5 class=\"recipe-title\">").concat((0, _utils.textLimiter)(recipe.title, 30), "</h5>\n                            <p class=\"recipe-publisher\">").concat(recipe.publisher, "</p>\n                        </div>\n                    </div>\n                </a>\n            </li>"));
+    _utils.elements.recipeItems.insertAdjacentHTML('beforeend', "<li class=\"recipe-item\">\n                <a href=\"#".concat(recipe.id, "\">\n                    <div class=\"figure\">\n                        <div class=\"recipe-image\">\n                            <img src=\"").concat(recipe.image_url, "\" alt=\"image\">\n                        </div>\n                        <div class=\"recipe-brief\">\n                            <h5 class=\"recipe-title\">").concat((0, _utils.textLimiter)(recipe.title, 30), "</h5>\n                            <p class=\"recipe-publisher\">").concat(recipe.publisher, "</p>\n                        </div>\n                    </div>\n                </a>\n            </li>"));
   });
 
-  _base.elements.recipeItems.insertAdjacentHTML('afterend', "<div class=\"pagination-buttons\">\n        ".concat(createPageNavigationButtons(curPage, totPages), "\n    </div>"));
+  _utils.elements.recipeItems.insertAdjacentHTML('afterend', "<div class=\"pagination-buttons\">\n        ".concat((0, _utils.createPageNavigationButtons)(curPage, totPages), "\n    </div>"));
 };
 
 exports.renderRecipes = renderRecipes;
 
-var createPageNavigationButtons = function createPageNavigationButtons(curPage, totPage) {
-  if (curPage === 1) {
-    return "\n            <div class=\"next\">Next >></div>\n        ";
-  } else if (curPage === totPage) {
-    return "\n            <div class=\"prev\"><< Prev</div>\n        ";
-  } else {
-    return "\n            <div class=\"next\">Next >></div>\n            <div class=\"prev\"><< Prev</div>\n        ";
-  }
-};
-
 var clearRecipes = function clearRecipes() {
-  while (_base.elements.recipeItems.firstChild) {
-    _base.elements.recipeItems.removeChild(_base.elements.recipeItems.lastChild);
+  while (_utils.elements.recipeItems.firstChild) {
+    _utils.elements.recipeItems.removeChild(_utils.elements.recipeItems.lastChild);
   }
 };
 
 exports.clearRecipes = clearRecipes;
-},{"@babel/runtime/regenerator":"../node_modules/@babel/runtime/regenerator/index.js","@babel/runtime/helpers/asyncToGenerator":"../node_modules/@babel/runtime/helpers/asyncToGenerator.js","../utils":"js/utils.js","./base":"js/views/base.js"}],"../node_modules/@babel/runtime/helpers/classCallCheck.js":[function(require,module,exports) {
+
+var clearPaginationButtons = function clearPaginationButtons() {
+  var recipeListSection = _utils.elements.recipeListSection;
+  if (_utils.elements.recipeListSection.querySelector(_utils.selectors.paginationButtons)) _utils.elements.recipeListSection.removeChild(recipeListSection.querySelector(_utils.selectors.paginationButtons));
+};
+
+exports.clearPaginationButtons = clearPaginationButtons;
+},{"../utils":"js/utils.js"}],"../node_modules/@babel/runtime/helpers/classCallCheck.js":[function(require,module,exports) {
 function _classCallCheck(instance, Constructor) {
   if (!(instance instanceof Constructor)) {
     throw new TypeError("Cannot call a class as a function");
@@ -3021,8 +3031,6 @@ var searchView = _interopRequireWildcard(require("./views/search"));
 
 var utils = _interopRequireWildcard(require("./utils"));
 
-var _base = require("./views/base");
-
 var _Search = _interopRequireDefault(require("./models/Search"));
 
 require("../styles/main.scss");
@@ -3046,8 +3054,8 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
  * - Favourites Object
  */
 var state = {};
-searchView.createAutoComplete({
-  root: _base.elements.recipeSearchInput,
+utils.createAutoComplete({
+  root: utils.elements.recipeSearchInput,
   placeholder: 'Start searching for your favourite recipe here...',
   fetchData: function () {
     var _fetchData = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee(userInput) {
@@ -3086,15 +3094,16 @@ searchView.createAutoComplete({
           switch (_context2.prev = _context2.next) {
             case 0:
               searchView.clearRecipes();
-              utils.showLoader(_base.elements.recipeListSection);
-              _context2.next = 4;
+              searchView.clearPaginationButtons();
+              utils.showLoader(utils.elements.recipeListSection);
+              _context2.next = 5;
               return state.search.getRecipesList(selectedQuery);
 
-            case 4:
-              utils.hideLoader(_base.elements.recipeListSection);
-              searchView.renderRecipes(state.search.recipes, 1, 5);
+            case 5:
+              utils.hideLoader(utils.elements.recipeListSection);
+              searchView.renderRecipes(state.search.recipes, 1);
 
-            case 6:
+            case 7:
             case "end":
               return _context2.stop();
           }
@@ -3114,7 +3123,7 @@ searchView.createAutoComplete({
 });
 
 var onDocumentClickHandler = function onDocumentClickHandler(event) {
-  var autoCompletes = _base.elements.autoCompletes;
+  var autoCompletes = utils.elements.autoCompletes;
 
   var _iterator = _createForOfIteratorHelper(autoCompletes),
       _step;
@@ -3135,7 +3144,14 @@ var onDocumentClickHandler = function onDocumentClickHandler(event) {
 };
 
 document.addEventListener('click', onDocumentClickHandler);
-},{"@babel/runtime/regenerator":"../node_modules/@babel/runtime/regenerator/index.js","@babel/runtime/helpers/asyncToGenerator":"../node_modules/@babel/runtime/helpers/asyncToGenerator.js","./views/search":"js/views/search.js","./utils":"js/utils.js","./views/base":"js/views/base.js","./models/Search":"js/models/Search.js","../styles/main.scss":"styles/main.scss"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+utils.elements.recipeListSection.addEventListener('click', function (event) {
+  if (event.target.closest(utils.selectors.nextPaginationButton) || event.target.closest(utils.selectors.prevPaginationButton)) {
+    searchView.clearRecipes();
+    searchView.clearPaginationButtons();
+    searchView.renderRecipes(state.search.recipes, parseInt(event.target.dataset.goto));
+  }
+});
+},{"@babel/runtime/regenerator":"../node_modules/@babel/runtime/regenerator/index.js","@babel/runtime/helpers/asyncToGenerator":"../node_modules/@babel/runtime/helpers/asyncToGenerator.js","./views/search":"js/views/search.js","./utils":"js/utils.js","./models/Search":"js/models/Search.js","../styles/main.scss":"styles/main.scss"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
