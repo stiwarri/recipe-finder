@@ -35,7 +35,7 @@ utils.createAutoComplete({
     }
 });
 
-const onDocumentClickHandler = (event) => {
+const onDocumentClickHandler = event => {
     const autoCompletes = utils.elements.autoCompletes;
     for (let autoComplete of autoCompletes) {
         if (!autoComplete.contains(event.target)) {
@@ -44,13 +44,15 @@ const onDocumentClickHandler = (event) => {
     }
 }
 
-document.addEventListener('click', onDocumentClickHandler);
-
-utils.elements.recipeListSection.addEventListener('click', event => {
+const paginationButtonsClickHandler = event => {
     if (event.target.closest(utils.selectors.nextPaginationButton) ||
         event.target.closest(utils.selectors.prevPaginationButton)) {
         searchView.clearRecipes();
         searchView.clearPaginationButtons();
         searchView.renderRecipes(state.search.recipes, parseInt(event.target.dataset.goto));
     }
-});
+}
+
+document.addEventListener('click', onDocumentClickHandler);
+
+utils.elements.recipeListSection.addEventListener('click', paginationButtonsClickHandler);

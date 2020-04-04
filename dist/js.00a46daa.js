@@ -3143,14 +3143,16 @@ var onDocumentClickHandler = function onDocumentClickHandler(event) {
   }
 };
 
-document.addEventListener('click', onDocumentClickHandler);
-utils.elements.recipeListSection.addEventListener('click', function (event) {
+var paginationButtonsClickHandler = function paginationButtonsClickHandler(event) {
   if (event.target.closest(utils.selectors.nextPaginationButton) || event.target.closest(utils.selectors.prevPaginationButton)) {
     searchView.clearRecipes();
     searchView.clearPaginationButtons();
     searchView.renderRecipes(state.search.recipes, parseInt(event.target.dataset.goto));
   }
-});
+};
+
+document.addEventListener('click', onDocumentClickHandler);
+utils.elements.recipeListSection.addEventListener('click', paginationButtonsClickHandler);
 },{"@babel/runtime/regenerator":"../node_modules/@babel/runtime/regenerator/index.js","@babel/runtime/helpers/asyncToGenerator":"../node_modules/@babel/runtime/helpers/asyncToGenerator.js","./views/search":"js/views/search.js","./utils":"js/utils.js","./models/Search":"js/models/Search.js","../styles/main.scss":"styles/main.scss"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
