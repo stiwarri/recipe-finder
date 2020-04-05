@@ -907,7 +907,8 @@ var elements = {
   recipeListSection: document.getElementById('recipe-list-section'),
   recipeSearchInput: document.getElementById('recipe-search-input'),
   recipeItems: document.querySelector('.recipe-items'),
-  autoCompletes: document.querySelectorAll('.auto-complete')
+  autoCompletes: document.querySelectorAll('.auto-complete'),
+  recipeDetails: document.querySelector('.recipe-details')
 };
 exports.elements = elements;
 var selectors = {
@@ -1020,7 +1021,7 @@ exports.textLimiter = textLimiter;
 
 var showLoader = function showLoader(targetEl) {
   var loader = "\n        <div class=\"loader\"></div>\n    ";
-  targetEl.insertAdjacentHTML('afterbegin', loader);
+  targetEl.insertAdjacentHTML('beforeend', loader);
 };
 
 exports.showLoader = showLoader;
@@ -1034,50 +1035,89 @@ exports.hideLoader = hideLoader;
 
 var createPageNavigationButtons = function createPageNavigationButtons(curPage, totPage) {
   if (curPage === 1) {
-    return "\n            <div class=\"next-page-nav-button next\" data-goto=\"".concat(curPage + 1, "\">Next >></div>\n        ");
+    return "\n            <div class=\"next-page-nav-button\" data-goto=\"".concat(curPage + 1, "\">Next >></div>\n        ");
   } else if (curPage === totPage) {
-    return "\n            <div class=\"prev-page-nav-button prev\" data-goto=\"".concat(curPage - 1, "\"><< Prev</div>\n        ");
+    return "\n            <div class=\"prev-page-nav-button\" data-goto=\"".concat(curPage - 1, "\"><< Prev</div>\n        ");
   } else {
-    return "\n            <div class=\"next-page-nav-button next\" data-goto=\"".concat(curPage + 1, "\">Next >></div>\n            <div class=\"prev-page-nav-button prev\" data-goto=\"").concat(curPage - 1, "\"><< Prev</div>\n        ");
+    return "\n            <div class=\"next-page-nav-button\" data-goto=\"".concat(curPage + 1, "\">Next >></div>\n            <div class=\"prev-page-nav-button\" data-goto=\"").concat(curPage - 1, "\"><< Prev</div>\n        ");
   }
 };
 
 exports.createPageNavigationButtons = createPageNavigationButtons;
-},{"@babel/runtime/regenerator":"../node_modules/@babel/runtime/regenerator/index.js","@babel/runtime/helpers/asyncToGenerator":"../node_modules/@babel/runtime/helpers/asyncToGenerator.js"}],"js/views/search.js":[function(require,module,exports) {
+},{"@babel/runtime/regenerator":"../node_modules/@babel/runtime/regenerator/index.js","@babel/runtime/helpers/asyncToGenerator":"../node_modules/@babel/runtime/helpers/asyncToGenerator.js"}],"js/views/recipe.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.clearPaginationButtons = exports.clearRecipes = exports.renderRecipes = void 0;
+exports.clearRecipeDetails = exports.renderRecipeDetails = void 0;
 
-var _utils = require("../utils");
+var utils = _interopRequireWildcard(require("../utils"));
+
+function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
+var renderRecipeDetails = function renderRecipeDetails(recipeObj) {
+  var recipeDetailsTemplate = "\n        <div class=\"recipe-image-container text-center\">\n            <img class=\"recipe-image\" src=\"".concat(recipeObj.recipeDetails.image_url, "\" alt=\"recipe-image\">\n        </div>\n        <h3 class=\"primary-text text-center\">").concat(recipeObj.recipeDetails.title, "</h3>\n        <div class=\"servings-time\">\n            <h4 class=\"servings\">\n                Servings: <em class=\"primary-text\">").concat(recipeObj.servings, "</em>\n            </h4>\n            <h4 class=\"time\">\n                Time: <em class=\"primary-text\">").concat(recipeObj.time, " Minutes</em>\n            </h4>\n        </div>\n        <div class=\"recipe-ingredients\">\n            ").concat(recipeObj.recipeDetails.ingredients.map(function (ing) {
+    return "<h5 class=\"ingredient\">\n                    <span class=\"secondary-text\">".concat(ing.count, " </span> ").concat(ing.unit, " ").concat(ing.ingredient, "\n                </h5>");
+  }).join(''), "\n        </div>\n        <div class=\"add-to-cart-button text-center\">Add to cart</div>  \n    ");
+  utils.elements.recipeDetails.insertAdjacentHTML('beforeend', recipeDetailsTemplate);
+};
+
+exports.renderRecipeDetails = renderRecipeDetails;
+
+var clearRecipeDetails = function clearRecipeDetails() {
+  while (utils.elements.recipeDetails.firstChild) {
+    utils.elements.recipeDetails.removeChild(utils.elements.recipeDetails.lastChild);
+  }
+};
+
+exports.clearRecipeDetails = clearRecipeDetails;
+},{"../utils":"js/utils.js"}],"js/views/search.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.clearPaginationButtons = exports.clearRecipes = exports.renderRecipes = exports.showRecipeListSection = void 0;
+
+var utils = _interopRequireWildcard(require("../utils"));
+
+function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
+var showRecipeListSection = function showRecipeListSection() {
+  utils.elements.recipeListSection.classList.remove('inactive');
+};
+
+exports.showRecipeListSection = showRecipeListSection;
 
 var renderRecipes = function renderRecipes(recipes, curPage) {
-  var recipesPerPage = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 10;
+  var recipesPerPage = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 7;
   var start = (curPage - 1) * recipesPerPage;
   var end = start + recipesPerPage;
   var totPages = Math.ceil(recipes.length / recipesPerPage);
   recipes.slice(start, end).forEach(function (recipe) {
-    _utils.elements.recipeItems.insertAdjacentHTML('beforeend', "<li class=\"recipe-item\">\n                <a href=\"#".concat(recipe.id, "\">\n                    <div class=\"figure\">\n                        <div class=\"recipe-image\">\n                            <img src=\"").concat(recipe.image_url, "\" alt=\"image\">\n                        </div>\n                        <div class=\"recipe-brief\">\n                            <h5 class=\"recipe-title\">").concat((0, _utils.textLimiter)(recipe.title, 30), "</h5>\n                            <p class=\"recipe-publisher\">").concat(recipe.publisher, "</p>\n                        </div>\n                    </div>\n                </a>\n            </li>"));
+    utils.elements.recipeItems.insertAdjacentHTML('beforeend', "<li class=\"recipe-item\">\n                <a href=\"#".concat(recipe.recipe_id, "\">\n                    <div class=\"figure\">\n                        <div class=\"recipe-image\">\n                            <img src=\"").concat(recipe.image_url, "\" alt=\"image\">\n                        </div>\n                        <div class=\"recipe-brief\">\n                            <h5 class=\"recipe-title\">").concat(utils.textLimiter(recipe.title, 30), "</h5>\n                            <p class=\"recipe-publisher\">").concat(recipe.publisher, "</p>\n                        </div>\n                    </div>\n                </a>\n            </li>"));
   });
-
-  _utils.elements.recipeItems.insertAdjacentHTML('afterend', "<div class=\"pagination-buttons\">\n        ".concat((0, _utils.createPageNavigationButtons)(curPage, totPages), "\n    </div>"));
+  utils.elements.recipeItems.insertAdjacentHTML('afterend', "<div class=\"pagination-buttons\">\n        ".concat(utils.createPageNavigationButtons(curPage, totPages), "\n    </div>"));
 };
 
 exports.renderRecipes = renderRecipes;
 
 var clearRecipes = function clearRecipes() {
-  while (_utils.elements.recipeItems.firstChild) {
-    _utils.elements.recipeItems.removeChild(_utils.elements.recipeItems.lastChild);
+  while (utils.elements.recipeItems.firstChild) {
+    utils.elements.recipeItems.removeChild(utils.elements.recipeItems.lastChild);
   }
 };
 
 exports.clearRecipes = clearRecipes;
 
 var clearPaginationButtons = function clearPaginationButtons() {
-  var recipeListSection = _utils.elements.recipeListSection;
-  if (_utils.elements.recipeListSection.querySelector(_utils.selectors.paginationButtons)) _utils.elements.recipeListSection.removeChild(recipeListSection.querySelector(_utils.selectors.paginationButtons));
+  var recipeListSection = utils.elements.recipeListSection;
+  if (utils.elements.recipeListSection.querySelector(utils.selectors.paginationButtons)) utils.elements.recipeListSection.removeChild(recipeListSection.querySelector(utils.selectors.paginationButtons));
 };
 
 exports.clearPaginationButtons = clearPaginationButtons;
@@ -2852,7 +2892,128 @@ module.exports.default = axios;
 
 },{"./utils":"../node_modules/axios/lib/utils.js","./helpers/bind":"../node_modules/axios/lib/helpers/bind.js","./core/Axios":"../node_modules/axios/lib/core/Axios.js","./core/mergeConfig":"../node_modules/axios/lib/core/mergeConfig.js","./defaults":"../node_modules/axios/lib/defaults.js","./cancel/Cancel":"../node_modules/axios/lib/cancel/Cancel.js","./cancel/CancelToken":"../node_modules/axios/lib/cancel/CancelToken.js","./cancel/isCancel":"../node_modules/axios/lib/cancel/isCancel.js","./helpers/spread":"../node_modules/axios/lib/helpers/spread.js"}],"../node_modules/axios/index.js":[function(require,module,exports) {
 module.exports = require('./lib/axios');
-},{"./lib/axios":"../node_modules/axios/lib/axios.js"}],"mock-data/queries-list.js":[function(require,module,exports) {
+},{"./lib/axios":"../node_modules/axios/lib/axios.js"}],"js/models/Recipe.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
+
+var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
+
+var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
+
+var _axios = _interopRequireDefault(require("axios"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var Recipe = function Recipe(recipeId) {
+  var _this = this;
+
+  (0, _classCallCheck2.default)(this, Recipe);
+  this.getRecipeDetails = /*#__PURE__*/(0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee() {
+    var recipeDetails;
+    return _regenerator.default.wrap(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            _context.next = 2;
+            return (0, _axios.default)("https://forkify-api.herokuapp.com/api/get?rId=".concat(_this.recipeId));
+
+          case 2:
+            recipeDetails = _context.sent;
+            _this.recipeDetails = recipeDetails.data.recipe;
+
+          case 4:
+          case "end":
+            return _context.stop();
+        }
+      }
+    }, _callee);
+  }));
+
+  this.calculateTime = function () {
+    var numIng = _this.recipeDetails.ingredients.length;
+    var periods = Math.ceil(numIng / 3);
+    _this.time = periods * 3;
+  };
+
+  this.calculateServings = function () {
+    _this.servings = 4;
+  };
+
+  this.parseIngredients = function () {
+    var uniformUnits = [['tablespoons', 'tbsp'], ['tablespoon', 'tbsp'], ['ounces', 'oz'], ['ounce', 'oz'], ['teaspoons', 'tsp'], ['teaspoon', 'tsp'], ['cups', 'cup'], ['pounds', 'pound'], ['kilograms', 'kg'], ['kilogram', 'kg'], ['grams', 'g'], ['gram', 'g'], ['ml', 'ml']];
+    var unitsMap = new Map(uniformUnits);
+
+    var newIngredients = _this.recipeDetails.ingredients.map(function (el) {
+      var ingredient = el.toLowerCase();
+      unitsMap.forEach(function (value, key) {
+        ingredient = ingredient.replace(key, value);
+      });
+      ingredient = ingredient.replace(/ *\([^)]*\) */g, ' ');
+      var arrIng = ingredient.split(' ');
+      var regExArr = arrIng[0].match(/[a-z]+|[^a-z]+/gi);
+
+      if (regExArr.length > 1) {
+        arrIng.splice(0, 1, regExArr[0], regExArr[1]);
+      }
+
+      var unitSet = new Set(unitsMap.values());
+      var unitIndex = arrIng.findIndex(function (string) {
+        return unitSet.has(string);
+      });
+      var objIng;
+
+      if (unitIndex > -1) {
+        var arrCount = arrIng.slice(0, unitIndex);
+        var count;
+
+        if (arrCount.length === 1) {
+          count = eval(arrIng[0].replace('-', '+'));
+        } else {
+          count = eval(arrIng.slice(0, unitIndex).join('+'));
+        }
+
+        objIng = {
+          count: count,
+          unit: arrIng[unitIndex],
+          ingredient: arrIng.slice(unitIndex + 1).join(' ')
+        };
+      } else if (parseInt(arrIng[0], 10)) {
+        objIng = {
+          count: parseInt(arrIng[0], 10),
+          unit: '',
+          ingredient: arrIng.slice(1).join(' ')
+        };
+      } else if (ingredient === -1 || ingredient === " ") {
+        objIng = {
+          count: '',
+          unit: '',
+          ingredient: ''
+        };
+      } else if (unitIndex === -1) {
+        objIng = {
+          count: 1,
+          unit: '',
+          ingredient: ingredient
+        };
+      }
+
+      return objIng;
+    });
+
+    _this.recipeDetails.ingredients = newIngredients;
+  };
+
+  this.recipeId = recipeId;
+};
+
+exports.default = Recipe;
+},{"@babel/runtime/regenerator":"../node_modules/@babel/runtime/regenerator/index.js","@babel/runtime/helpers/asyncToGenerator":"../node_modules/@babel/runtime/helpers/asyncToGenerator.js","@babel/runtime/helpers/classCallCheck":"../node_modules/@babel/runtime/helpers/classCallCheck.js","axios":"../node_modules/axios/index.js"}],"mock-data/queries-list.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -3027,9 +3188,13 @@ var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"))
 
 var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
 
+var recipeView = _interopRequireWildcard(require("./views/recipe"));
+
 var searchView = _interopRequireWildcard(require("./views/search"));
 
 var utils = _interopRequireWildcard(require("./utils"));
+
+var _Recipe = _interopRequireDefault(require("./models/Recipe"));
 
 var _Search = _interopRequireDefault(require("./models/Search"));
 
@@ -3054,6 +3219,10 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
  * - Favourites Object
  */
 var state = {};
+/**
+ * SEARCH CONTROLLER
+ */
+
 utils.createAutoComplete({
   root: utils.elements.recipeSearchInput,
   placeholder: 'Start searching for your favourite recipe here...',
@@ -3093,17 +3262,18 @@ utils.createAutoComplete({
         while (1) {
           switch (_context2.prev = _context2.next) {
             case 0:
+              searchView.showRecipeListSection();
               searchView.clearRecipes();
               searchView.clearPaginationButtons();
               utils.showLoader(utils.elements.recipeListSection);
-              _context2.next = 5;
+              _context2.next = 6;
               return state.search.getRecipesList(selectedQuery);
 
-            case 5:
+            case 6:
               utils.hideLoader(utils.elements.recipeListSection);
               searchView.renderRecipes(state.search.recipes, 1);
 
-            case 7:
+            case 8:
             case "end":
               return _context2.stop();
           }
@@ -3122,7 +3292,7 @@ utils.createAutoComplete({
   }
 });
 
-var onDocumentClickHandler = function onDocumentClickHandler(event) {
+var documentClickHandler = function documentClickHandler(event) {
   var autoCompletes = utils.elements.autoCompletes;
 
   var _iterator = _createForOfIteratorHelper(autoCompletes),
@@ -3133,7 +3303,7 @@ var onDocumentClickHandler = function onDocumentClickHandler(event) {
       var autoComplete = _step.value;
 
       if (!autoComplete.contains(event.target)) {
-        autoComplete.querySelector('.auto-complete-list').classList.add('inactive');
+        autoComplete.querySelector(utils.selectors.autoCompleteList).classList.add('inactive');
       }
     }
   } catch (err) {
@@ -3151,9 +3321,56 @@ var paginationButtonsClickHandler = function paginationButtonsClickHandler(event
   }
 };
 
-document.addEventListener('click', onDocumentClickHandler);
+document.addEventListener('click', documentClickHandler);
 utils.elements.recipeListSection.addEventListener('click', paginationButtonsClickHandler);
-},{"@babel/runtime/regenerator":"../node_modules/@babel/runtime/regenerator/index.js","@babel/runtime/helpers/asyncToGenerator":"../node_modules/@babel/runtime/helpers/asyncToGenerator.js","./views/search":"js/views/search.js","./utils":"js/utils.js","./models/Search":"js/models/Search.js","../styles/main.scss":"styles/main.scss"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+/**
+ * RECIPE CONTROLLER
+ */
+
+var loadRecipeDetails = /*#__PURE__*/function () {
+  var _ref = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee3() {
+    var recipeId;
+    return _regenerator.default.wrap(function _callee3$(_context3) {
+      while (1) {
+        switch (_context3.prev = _context3.next) {
+          case 0:
+            recipeId = window.location.hash.replace('#', '');
+
+            if (!recipeId) {
+              _context3.next = 12;
+              break;
+            }
+
+            recipeView.clearRecipeDetails();
+            utils.showLoader(utils.elements.recipeDetails);
+            state.recipe = new _Recipe.default(recipeId);
+            _context3.next = 7;
+            return state.recipe.getRecipeDetails();
+
+          case 7:
+            state.recipe.calculateTime();
+            state.recipe.calculateServings();
+            state.recipe.parseIngredients();
+            utils.hideLoader(utils.elements.recipeDetails);
+            recipeView.renderRecipeDetails(state.recipe);
+
+          case 12:
+          case "end":
+            return _context3.stop();
+        }
+      }
+    }, _callee3);
+  }));
+
+  return function loadRecipeDetails() {
+    return _ref.apply(this, arguments);
+  };
+}();
+
+['hashchange', 'load'].forEach(function (event) {
+  return window.addEventListener(event, loadRecipeDetails);
+});
+},{"@babel/runtime/regenerator":"../node_modules/@babel/runtime/regenerator/index.js","@babel/runtime/helpers/asyncToGenerator":"../node_modules/@babel/runtime/helpers/asyncToGenerator.js","./views/recipe":"js/views/recipe.js","./views/search":"js/views/search.js","./utils":"js/utils.js","./models/Recipe":"js/models/Recipe.js","./models/Search":"js/models/Search.js","../styles/main.scss":"styles/main.scss"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;

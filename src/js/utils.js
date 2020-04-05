@@ -2,7 +2,8 @@ export const elements = {
     recipeListSection: document.getElementById('recipe-list-section'),
     recipeSearchInput: document.getElementById('recipe-search-input'),
     recipeItems: document.querySelector('.recipe-items'),
-    autoCompletes: document.querySelectorAll('.auto-complete')
+    autoCompletes: document.querySelectorAll('.auto-complete'),
+    recipeDetails: document.querySelector('.recipe-details')
 };
 
 export const selectors = {
@@ -85,7 +86,7 @@ export const showLoader = targetEl => {
     const loader = `
         <div class="loader"></div>
     `;
-    targetEl.insertAdjacentHTML('afterbegin', loader);
+    targetEl.insertAdjacentHTML('beforeend', loader);
 }
 
 export const hideLoader = targetEl => {
@@ -96,16 +97,16 @@ export const hideLoader = targetEl => {
 export const createPageNavigationButtons = (curPage, totPage) => {
     if (curPage === 1) {
         return `
-            <div class="next-page-nav-button next" data-goto="${curPage + 1}">Next >></div>
+            <div class="next-page-nav-button" data-goto="${curPage + 1}">Next >></div>
         `;
     } else if (curPage === totPage) {
         return `
-            <div class="prev-page-nav-button prev" data-goto="${curPage - 1}"><< Prev</div>
+            <div class="prev-page-nav-button" data-goto="${curPage - 1}"><< Prev</div>
         `;
     } else {
         return `
-            <div class="next-page-nav-button next" data-goto="${curPage + 1}">Next >></div>
-            <div class="prev-page-nav-button prev" data-goto="${curPage - 1}"><< Prev</div>
+            <div class="next-page-nav-button" data-goto="${curPage + 1}">Next >></div>
+            <div class="prev-page-nav-button" data-goto="${curPage - 1}"><< Prev</div>
         `;
     }
 }

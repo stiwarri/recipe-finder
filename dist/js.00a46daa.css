@@ -1,4 +1,121 @@
 /* Variables */
+.text-center {
+  text-align: center;
+}
+
+.inactive {
+  display: none;
+}
+
+.invisible {
+  visibility: hidden;
+}
+
+.pagination-buttons {
+  margin: 1rem;
+  display: flex;
+  justify-content: space-between;
+}
+.pagination-buttons .next-page-nav-button, .pagination-buttons .prev-page-nav-button {
+  cursor: pointer;
+  color: #00034b;
+  font-weight: bold;
+}
+
+.primary-text {
+  color: #e1a50f;
+  font-weight: bold;
+}
+
+.secondary-text {
+  color: #00034b;
+}
+
+/* Auto complete Styles */
+.auto-complete {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  align-items: center;
+}
+.auto-complete .search-bar {
+  width: 400px;
+}
+.auto-complete .search-bar input[type=text] {
+  width: 100%;
+  padding: 5px 5px;
+  border-radius: 5px;
+  border-color: #00034b;
+}
+.auto-complete .search-bar input[type=text]:hover,
+.auto-complete .search-bar input[type=text]:focus {
+  border: 2px solid #e1a50f;
+}
+.auto-complete .auto-complete-list {
+  width: 400px;
+  max-height: 400px;
+  overflow-y: scroll;
+  box-shadow: 2px 2px 4px #e1a50f;
+  background-color: #e1a50f;
+  position: absolute;
+  z-index: 101;
+  top: 30px;
+}
+.auto-complete .auto-complete-list .auto-complete-item {
+  border-bottom: 2px solid #00034b;
+  padding: 1rem;
+  color: #00034b;
+  font-weight: bold;
+  cursor: pointer;
+}
+.auto-complete .auto-complete-list .auto-complete-item:hover {
+  background-color: white;
+}
+
+/* Loader Styles */
+.loader,
+.loader:after {
+  border-radius: 50%;
+  width: 10em;
+  height: 10em;
+}
+
+.loader {
+  margin: 60px auto;
+  font-size: 10px;
+  position: relative;
+  text-indent: -9999em;
+  border-top: 1.1em solid rgba(0, 3, 75, 0.2);
+  border-right: 1.1em solid rgba(0, 3, 75, 0.2);
+  border-bottom: 1.1em solid rgba(0, 3, 75, 0.2);
+  border-left: 1.1em solid #00034b;
+  -webkit-transform: translateZ(0);
+  -ms-transform: translateZ(0);
+  transform: translateZ(0);
+  -webkit-animation: load8 1.1s infinite linear;
+  animation: load8 1.1s infinite linear;
+}
+
+@-webkit-keyframes load8 {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+@keyframes load8 {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
 /* General Styles */
 * {
   margin: 0;
@@ -57,19 +174,29 @@ button:focus {
 /* Main Section Styles */
 #app-main {
   display: grid;
-  grid-template-columns: repeat(4, [column-start] 25% [column-end]);
+  grid-template-columns: repeat(4, [column-start] minmax(0, 1fr) [column-end]);
   justify-items: center;
+  grid-gap: 10px;
+  /* Recipe List Section Styles */
+  /* Recipe Details Section Styles */
+  /* Shopping List Section Styles */
 }
 #app-main #recipe-list-section {
   grid-column: column-start 1/column-end 1;
-  padding: 1rem;
+  padding: 1rem 0;
   background-color: #e1a50f;
   width: 100%;
-  height: calc(100vh - 104px);
   overflow-x: hidden;
+}
+#app-main #recipe-list-section .no-recipe-placeholder {
+  text-align: center;
+  height: calc(100vh - 134px);
+  line-height: calc(100vh - 134px);
 }
 #app-main #recipe-list-section .section-title {
   text-align: center;
+  text-transform: uppercase;
+  color: #00034b;
 }
 #app-main #recipe-list-section .recipe-items {
   color: #00034b;
@@ -91,102 +218,41 @@ button:focus {
 }
 #app-main #recipe-details-section {
   grid-column: column-start 2/column-end 3;
-  padding: 1rem;
+  padding: 1rem 0;
 }
-#app-main #shopping-list-section {
-  grid-column: column-start 4/column-end 4;
-  padding: 1rem;
+#app-main #recipe-details-section .recipe-details {
+  margin: 2rem 0;
 }
-
-/* Auto complete Styles */
-.auto-complete {
+#app-main #recipe-details-section .recipe-details .recipe-image-container {
+  margin: 1rem 0;
+}
+#app-main #recipe-details-section .recipe-details .recipe-image-container .recipe-image {
   width: 400px;
+  height: 300px;
+}
+#app-main #recipe-details-section .recipe-details .servings-time {
   display: flex;
-  flex-direction: column;
-  position: relative;
+  justify-content: space-between;
+  margin: 1rem 0;
 }
-.auto-complete .search-bar input[type=text] {
-  width: 98%;
-  padding: 5px 5px;
-  border-radius: 5px;
-  border-color: #00034b;
+#app-main #recipe-details-section .recipe-details .recipe-ingredients {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin: 1rem 0;
+  grid-gap: 10px;
 }
-.auto-complete .search-bar input[type=text]:hover,
-.auto-complete .search-bar input[type=text]:focus {
-  border: 2px solid #e1a50f;
-}
-.auto-complete .auto-complete-list {
-  width: 100%;
-  max-height: 400px;
-  overflow-y: scroll;
-  box-shadow: 2px 2px 4px #e1a50f;
+#app-main #recipe-details-section .recipe-details .add-to-cart-button {
+  width: 50%;
+  margin: auto;
+  padding: 0.5rem;
   background-color: #e1a50f;
-  position: absolute;
-  z-index: 101;
-  top: 30px;
-}
-.auto-complete .auto-complete-list .auto-complete-item {
-  border-bottom: 2px solid #00034b;
-  padding: 1rem;
   color: #00034b;
   font-weight: bold;
   cursor: pointer;
 }
-.auto-complete .auto-complete-list .auto-complete-item:hover {
-  background-color: white;
-}
-
-.inactive {
-  display: none;
-}
-
-.pagination-buttons {
-  display: flex;
-  justify-content: space-between;
-}
-
-.loader,
-.loader:after {
-  border-radius: 50%;
-  width: 10em;
-  height: 10em;
-}
-
-.loader {
-  margin: 60px auto;
-  font-size: 10px;
-  position: relative;
-  text-indent: -9999em;
-  border-top: 1.1em solid rgba(0, 3, 75, 0.2);
-  border-right: 1.1em solid rgba(0, 3, 75, 0.2);
-  border-bottom: 1.1em solid rgba(0, 3, 75, 0.2);
-  border-left: 1.1em solid #00034b;
-  -webkit-transform: translateZ(0);
-  -ms-transform: translateZ(0);
-  transform: translateZ(0);
-  -webkit-animation: load8 1.1s infinite linear;
-  animation: load8 1.1s infinite linear;
-}
-
-@-webkit-keyframes load8 {
-  0% {
-    -webkit-transform: rotate(0deg);
-    transform: rotate(0deg);
-  }
-  100% {
-    -webkit-transform: rotate(360deg);
-    transform: rotate(360deg);
-  }
-}
-@keyframes load8 {
-  0% {
-    -webkit-transform: rotate(0deg);
-    transform: rotate(0deg);
-  }
-  100% {
-    -webkit-transform: rotate(360deg);
-    transform: rotate(360deg);
-  }
+#app-main #shopping-list-section {
+  grid-column: column-start 4/column-end 4;
+  padding: 1rem;
 }
 
 /*# sourceMappingURL=/js.00a46daa.css.map */
