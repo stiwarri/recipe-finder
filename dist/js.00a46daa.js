@@ -1059,9 +1059,9 @@ function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 var renderRecipeDetails = function renderRecipeDetails(recipeObj) {
-  var recipeDetailsTemplate = "\n        <div class=\"recipe-image-container text-center\">\n            <img class=\"recipe-image\" src=\"".concat(recipeObj.recipeDetails.image_url, "\" alt=\"recipe-image\">\n        </div>\n        <h3 class=\"primary-text text-center\">").concat(recipeObj.recipeDetails.title, "</h3>\n        <div class=\"servings-time\">\n            <h4 class=\"servings\">\n                Servings: <em class=\"primary-text\">").concat(recipeObj.servings, "</em>\n            </h4>\n            <h4 class=\"time\">\n                Time: <em class=\"primary-text\">").concat(recipeObj.time, " Minutes</em>\n            </h4>\n        </div>\n        <div class=\"recipe-ingredients\">\n            ").concat(recipeObj.recipeDetails.ingredients.map(function (ing) {
+  var recipeDetailsTemplate = "\n        <div class=\"recipe-image-container text-center\">\n            <img class=\"recipe-image\" src=\"".concat(recipeObj.recipeDetails.image_url, "\" alt=\"recipe-image\">\n        </div>\n        <h3 class=\"primary-text text-center\">").concat(recipeObj.recipeDetails.title, "</h3>\n        <div class=\"servings-time\">\n            <h4 class=\"servings\">\n                Servings: <em class=\"primary-text\">").concat(recipeObj.servings, "</em>\n            </h4>\n            <h4 class=\"time\">\n                Time: <em class=\"primary-text\">").concat(recipeObj.time, " Minutes</em>\n            </h4>\n            <h5 class=\"favourite secondary-text\">\n                Add to favourites\n            </h5>\n        </div>\n        <div class=\"recipe-ingredients\">\n            ").concat(recipeObj.recipeDetails.ingredients.map(function (ing) {
     return "<h5 class=\"ingredient\">\n                    <span class=\"secondary-text\">".concat(ing.count, " </span> ").concat(ing.unit, " ").concat(ing.ingredient, "\n                </h5>");
-  }).join(''), "\n        </div>\n        <div class=\"add-to-cart-button text-center\">Add to cart</div>  \n    ");
+  }).join(''), "\n        </div>\n        <div class=\"add-to-cart-button text-center\">Add to cart</div>  \n        <div class=\"cooking-directions\">    \n            <h3 class=\"direction-title primary-text text-center\">How To Cook It</h3>\n            <p class=\"text-center\">This recipe was carefully designed and tested by ").concat(recipeObj.recipeDetails.publisher, "</p>\n            <p class=\"text-center\">Please checkout directions at their website</p>\n            <div class=\"direction-button text-center\">\n                <a target=\"_blank\" href=\"").concat(recipeObj.recipeDetails.source_url, "\">Visit Publisher's Website</a>\n            </div>  \n        </div>\n    ");
   utils.elements.recipeDetails.insertAdjacentHTML('beforeend', recipeDetailsTemplate);
 };
 
@@ -1095,7 +1095,7 @@ var showRecipeListSection = function showRecipeListSection() {
 exports.showRecipeListSection = showRecipeListSection;
 
 var renderRecipes = function renderRecipes(recipes, curPage) {
-  var recipesPerPage = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 7;
+  var recipesPerPage = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 10;
   var start = (curPage - 1) * recipesPerPage;
   var end = start + recipesPerPage;
   var totPages = Math.ceil(recipes.length / recipesPerPage);
@@ -2958,7 +2958,7 @@ var Recipe = function Recipe(recipeId) {
       var arrIng = ingredient.split(' ');
       var regExArr = arrIng[0].match(/[a-z]+|[^a-z]+/gi);
 
-      if (regExArr.length > 1) {
+      if (regExArr && regExArr.length > 1) {
         arrIng.splice(0, 1, regExArr[0], regExArr[1]);
       }
 

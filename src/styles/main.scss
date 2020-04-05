@@ -129,6 +129,11 @@ button:focus {
                 display: flex;
                 justify-content: space-between;
                 margin: 1rem 0;
+
+                .favourite {
+                    text-decoration: underline;
+                    cursor: pointer;
+                }
             }
 
             .recipe-ingredients {
@@ -146,6 +151,24 @@ button:focus {
                 color: $secondary-color;
                 font-weight: bold;
                 cursor: pointer;
+            }
+
+            .cooking-directions {
+                margin: 2rem 0;
+
+                .direction-title  {
+                    margin: 1rem 0;
+                }
+
+                .direction-button {
+                    width: 50%;
+                    margin: auto;
+                    padding: 1rem;
+                    color: $secondary-color;
+                    text-decoration: underline;
+                    font-weight: bold;
+                    cursor: pointer;
+                }    
             }
         }
     }

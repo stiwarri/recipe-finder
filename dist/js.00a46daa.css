@@ -235,6 +235,10 @@ button:focus {
   justify-content: space-between;
   margin: 1rem 0;
 }
+#app-main #recipe-details-section .recipe-details .servings-time .favourite {
+  text-decoration: underline;
+  cursor: pointer;
+}
 #app-main #recipe-details-section .recipe-details .recipe-ingredients {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -247,6 +251,21 @@ button:focus {
   padding: 0.5rem;
   background-color: #e1a50f;
   color: #00034b;
+  font-weight: bold;
+  cursor: pointer;
+}
+#app-main #recipe-details-section .recipe-details .cooking-directions {
+  margin: 2rem 0;
+}
+#app-main #recipe-details-section .recipe-details .cooking-directions .direction-title {
+  margin: 1rem 0;
+}
+#app-main #recipe-details-section .recipe-details .cooking-directions .direction-button {
+  width: 50%;
+  margin: auto;
+  padding: 1rem;
+  color: #00034b;
+  text-decoration: underline;
   font-weight: bold;
   cursor: pointer;
 }

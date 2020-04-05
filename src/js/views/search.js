@@ -4,7 +4,7 @@ export const showRecipeListSection = () => {
     utils.elements.recipeListSection.classList.remove('inactive');
 }
 
-export const renderRecipes = (recipes, curPage, recipesPerPage = 7) => {
+export const renderRecipes = (recipes, curPage, recipesPerPage = 10) => {
     const start = (curPage - 1) * recipesPerPage;
     const end = start + recipesPerPage;
     const totPages = Math.ceil(recipes.length / recipesPerPage);

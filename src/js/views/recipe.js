@@ -13,6 +13,9 @@ export const renderRecipeDetails = recipeObj => {
             <h4 class="time">
                 Time: <em class="primary-text">${recipeObj.time} Minutes</em>
             </h4>
+            <h5 class="favourite secondary-text">
+                Add to favourites
+            </h5>
         </div>
         <div class="recipe-ingredients">
             ${recipeObj.recipeDetails.ingredients.map(ing => 
@@ -22,6 +25,14 @@ export const renderRecipeDetails = recipeObj => {
             ).join('')}
         </div>
         <div class="add-to-cart-button text-center">Add to cart</div>  
+        <div class="cooking-directions">    
+            <h3 class="direction-title primary-text text-center">How To Cook It</h3>
+            <p class="text-center">This recipe was carefully designed and tested by ${recipeObj.recipeDetails.publisher}</p>
+            <p class="text-center">Please checkout directions at their website</p>
+            <div class="direction-button text-center">
+                <a target="_blank" href="${recipeObj.recipeDetails.source_url}">Visit Publisher's Website</a>
+            </div>  
+        </div>
     `;
     utils.elements.recipeDetails.insertAdjacentHTML('beforeend', recipeDetailsTemplate);
 }

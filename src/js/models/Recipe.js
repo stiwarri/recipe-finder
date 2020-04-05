@@ -46,7 +46,7 @@ export default class Recipe {
 
             const arrIng = ingredient.split(' ');
             const regExArr = arrIng[0].match(/[a-z]+|[^a-z]+/gi);
-            if (regExArr.length > 1) {
+            if (regExArr && regExArr.length > 1) {
                 arrIng.splice(0, 1, regExArr[0], regExArr[1])
             }
 
