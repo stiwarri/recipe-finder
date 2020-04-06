@@ -31,6 +31,26 @@
   color: #00034b;
 }
 
+.section-title {
+  text-align: center;
+  text-transform: uppercase;
+  color: #00034b;
+}
+
+.inc-button, .dec-button {
+  padding: 1px 10px;
+  background-color: #e1a50f;
+  color: white;
+  cursor: pointer;
+}
+
+.delete-button {
+  padding: 5px;
+  color: #00034b;
+  font-weight: bold;
+  cursor: pointer;
+}
+
 /* Auto complete Styles */
 .auto-complete {
   display: flex;
@@ -193,11 +213,6 @@ button:focus {
   height: calc(100vh - 134px);
   line-height: calc(100vh - 134px);
 }
-#app-main #recipe-list-section .section-title {
-  text-align: center;
-  text-transform: uppercase;
-  color: #00034b;
-}
 #app-main #recipe-list-section .recipe-items {
   color: #00034b;
 }
@@ -205,6 +220,9 @@ button:focus {
   padding: 1rem 1rem;
 }
 #app-main #recipe-list-section .recipe-items .recipe-item:hover {
+  background-color: white;
+}
+#app-main #recipe-list-section .recipe-items .selected-recipe {
   background-color: white;
 }
 #app-main #recipe-list-section .recipe-items .figure {
@@ -271,7 +289,28 @@ button:focus {
 }
 #app-main #shopping-list-section {
   grid-column: column-start 4/column-end 4;
-  padding: 1rem;
+  background-color: #e1a50f;
+  width: 100%;
+  overflow-x: hidden;
+}
+#app-main #shopping-list-section .cart-items {
+  color: #00034b;
+}
+#app-main #shopping-list-section .cart-items .cart-item {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 3fr) minmax(0, 0.5fr);
+  padding: 1rem 1rem;
+  align-items: center;
+}
+#app-main #shopping-list-section .cart-items .cart-item:hover {
+  background-color: white;
+}
+#app-main #shopping-list-section .cart-items .cart-item .item-unit {
+  font-style: italic;
+  font-weight: bold;
+}
+#app-main #shopping-list-section .cart-items .cart-item .item-count {
+  max-height: 30px;
 }
 
 /*# sourceMappingURL=/js.00a46daa.css.map */

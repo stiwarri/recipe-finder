@@ -3,7 +3,9 @@ export const elements = {
     recipeSearchInput: document.getElementById('recipe-search-input'),
     recipeItems: document.querySelector('.recipe-items'),
     autoCompletes: document.querySelectorAll('.auto-complete'),
-    recipeDetails: document.querySelector('.recipe-details')
+    recipeDetails: document.querySelector('.recipe-details'),
+    shoppingListSection: document.getElementById('shopping-list-section'),
+    cartItems: document.querySelector('.cart-items')
 };
 
 export const selectors = {
@@ -11,7 +13,11 @@ export const selectors = {
     autoCompleteList: '.auto-complete-list',
     paginationButtons: '.pagination-buttons',
     nextPaginationButton: '.next-page-nav-button',
-    prevPaginationButton: '.prev-page-nav-button'
+    prevPaginationButton: '.prev-page-nav-button',
+    servingsCount: '.servings .servings-count',
+    ingredientCount: '.ingredient .ingredient-count',
+    cartItem: '.cart-item',
+    deleteItemButton: '.delete-button'
 };
 
 export const createAutoComplete = ({

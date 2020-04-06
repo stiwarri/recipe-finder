@@ -78,12 +78,6 @@ button:focus {
             line-height: calc(100vh - 134px);
         }
 
-        .section-title {
-            text-align: center;
-            text-transform: uppercase;
-            color: $secondary-color;
-        }
-
         .recipe-items {
             color: $secondary-color;
 
@@ -93,6 +87,10 @@ button:focus {
                 &:hover {
                     background-color: white;
                 }
+            }
+
+            .selected-recipe {
+                background-color: white;
             }
 
             .figure {
@@ -176,6 +174,32 @@ button:focus {
     /* Shopping List Section Styles */
     #shopping-list-section {
         grid-column: column-start 4 / column-end 4;
-        padding: 1rem;
+        background-color: $primary-color;
+        width: 100%;
+        overflow-x: hidden;
+
+        .cart-items {
+            color: $secondary-color;
+
+            .cart-item {
+                display: grid;
+                grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 3fr) minmax(0, 0.5fr);
+                padding: 1rem 1rem;
+                align-items: center;
+
+                &:hover {
+                    background-color: white;
+                }
+
+                .item-unit {
+                    font-style: italic;
+                    font-weight: bold;
+                }
+
+                .item-count {
+                    max-height: 30px;
+                }
+            }
+        }
     }
 }

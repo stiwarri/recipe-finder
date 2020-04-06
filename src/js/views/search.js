@@ -44,3 +44,19 @@ export const clearPaginationButtons = () => {
     if (utils.elements.recipeListSection.querySelector(utils.selectors.paginationButtons))
         utils.elements.recipeListSection.removeChild(recipeListSection.querySelector(utils.selectors.paginationButtons));
 }
+
+
+export const selectedRecipeStyle = (prevRecipe, recId) => {
+    if (prevRecipe) {
+        let prevRecId = prevRecipe.recipeId;
+        let prevSelectedRecipe = utils.elements.recipeListSection.querySelector(`a[href="#${prevRecId}"]`);
+        if (prevSelectedRecipe) {
+            prevSelectedRecipe.parentNode.classList.remove('selected-recipe');
+        }
+    }
+
+    let selectedRecipe = utils.elements.recipeListSection.querySelector(`a[href="#${recId}"]`);
+    if (selectedRecipe) {
+        selectedRecipe.parentNode.classList.add('selected-recipe');
+    }
+}

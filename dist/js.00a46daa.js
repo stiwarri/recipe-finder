@@ -908,7 +908,9 @@ var elements = {
   recipeSearchInput: document.getElementById('recipe-search-input'),
   recipeItems: document.querySelector('.recipe-items'),
   autoCompletes: document.querySelectorAll('.auto-complete'),
-  recipeDetails: document.querySelector('.recipe-details')
+  recipeDetails: document.querySelector('.recipe-details'),
+  shoppingListSection: document.getElementById('shopping-list-section'),
+  cartItems: document.querySelector('.cart-items')
 };
 exports.elements = elements;
 var selectors = {
@@ -916,7 +918,11 @@ var selectors = {
   autoCompleteList: '.auto-complete-list',
   paginationButtons: '.pagination-buttons',
   nextPaginationButton: '.next-page-nav-button',
-  prevPaginationButton: '.prev-page-nav-button'
+  prevPaginationButton: '.prev-page-nav-button',
+  servingsCount: '.servings .servings-count',
+  ingredientCount: '.ingredient .ingredient-count',
+  cartItem: '.cart-item',
+  deleteItemButton: '.delete-button'
 };
 exports.selectors = selectors;
 
@@ -1050,7 +1056,7 @@ exports.createPageNavigationButtons = createPageNavigationButtons;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.clearRecipeDetails = exports.renderRecipeDetails = void 0;
+exports.updateRecipeDetails = exports.clearRecipeDetails = exports.renderRecipeDetails = void 0;
 
 var utils = _interopRequireWildcard(require("../utils"));
 
@@ -1059,8 +1065,8 @@ function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 var renderRecipeDetails = function renderRecipeDetails(recipeObj) {
-  var recipeDetailsTemplate = "\n        <div class=\"recipe-image-container text-center\">\n            <img class=\"recipe-image\" src=\"".concat(recipeObj.recipeDetails.image_url, "\" alt=\"recipe-image\">\n        </div>\n        <h3 class=\"primary-text text-center\">").concat(recipeObj.recipeDetails.title, "</h3>\n        <div class=\"servings-time\">\n            <h4 class=\"servings\">\n                Servings: <em class=\"primary-text\">").concat(recipeObj.servings, "</em>\n            </h4>\n            <h4 class=\"time\">\n                Time: <em class=\"primary-text\">").concat(recipeObj.time, " Minutes</em>\n            </h4>\n            <h5 class=\"favourite secondary-text\">\n                Add to favourites\n            </h5>\n        </div>\n        <div class=\"recipe-ingredients\">\n            ").concat(recipeObj.recipeDetails.ingredients.map(function (ing) {
-    return "<h5 class=\"ingredient\">\n                    <span class=\"secondary-text\">".concat(ing.count, " </span> ").concat(ing.unit, " ").concat(ing.ingredient, "\n                </h5>");
+  var recipeDetailsTemplate = "\n        <div class=\"recipe-image-container text-center\">\n            <img class=\"recipe-image\" src=\"".concat(recipeObj.recipeDetails.image_url, "\" alt=\"recipe-image\">\n        </div>\n        <h3 class=\"primary-text text-center\">").concat(recipeObj.recipeDetails.title, "</h3>\n        <div class=\"servings-time\">\n            <h4 class=\"servings\">\n                Servings: \n                <span class=\"inc-button\">+</span>\n                <em class=\"servings-count secondary-text\">").concat(recipeObj.servings, "</em>\n                <span class=\"dec-button\">-</span>\n            </h4>\n            <h4 class=\"time\">\n                Time: <em class=\"secondary-text\">").concat(recipeObj.time, " Minutes</em>\n            </h4>\n            <h5 class=\"favourite primary-text\">\n                Add to favourites\n            </h5>\n        </div>\n        <div class=\"recipe-ingredients\">\n            ").concat(recipeObj.recipeDetails.ingredients.map(function (ing) {
+    return "<h5 class=\"ingredient\">\n                    <span class=\"ingredient-count secondary-text\">".concat(ing.count, " </span> ").concat(ing.unit, " ").concat(ing.ingredient, "\n                </h5>");
   }).join(''), "\n        </div>\n        <div class=\"add-to-cart-button text-center\">Add to cart</div>  \n        <div class=\"cooking-directions\">    \n            <h3 class=\"direction-title primary-text text-center\">How To Cook It</h3>\n            <p class=\"text-center\">This recipe was carefully designed and tested by ").concat(recipeObj.recipeDetails.publisher, "</p>\n            <p class=\"text-center\">Please checkout directions at their website</p>\n            <div class=\"direction-button text-center\">\n                <a target=\"_blank\" href=\"").concat(recipeObj.recipeDetails.source_url, "\">Visit Publisher's Website</a>\n            </div>  \n        </div>\n    ");
   utils.elements.recipeDetails.insertAdjacentHTML('beforeend', recipeDetailsTemplate);
 };
@@ -1074,13 +1080,23 @@ var clearRecipeDetails = function clearRecipeDetails() {
 };
 
 exports.clearRecipeDetails = clearRecipeDetails;
+
+var updateRecipeDetails = function updateRecipeDetails(recipe) {
+  utils.elements.recipeDetails.querySelector(utils.selectors.servingsCount).textContent = recipe.servings;
+  var allIngredientCounts = utils.elements.recipeDetails.querySelectorAll(utils.selectors.ingredientCount);
+  Array.from(allIngredientCounts).forEach(function (el, i) {
+    el.textContent = recipe.recipeDetails.ingredients[i].count;
+  });
+};
+
+exports.updateRecipeDetails = updateRecipeDetails;
 },{"../utils":"js/utils.js"}],"js/views/search.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.clearPaginationButtons = exports.clearRecipes = exports.renderRecipes = exports.showRecipeListSection = void 0;
+exports.selectedRecipeStyle = exports.clearPaginationButtons = exports.clearRecipes = exports.renderRecipes = exports.showRecipeListSection = void 0;
 
 var utils = _interopRequireWildcard(require("../utils"));
 
@@ -1121,6 +1137,55 @@ var clearPaginationButtons = function clearPaginationButtons() {
 };
 
 exports.clearPaginationButtons = clearPaginationButtons;
+
+var selectedRecipeStyle = function selectedRecipeStyle(prevRecipe, recId) {
+  if (prevRecipe) {
+    var prevRecId = prevRecipe.recipeId;
+    var prevSelectedRecipe = utils.elements.recipeListSection.querySelector("a[href=\"#".concat(prevRecId, "\"]"));
+
+    if (prevSelectedRecipe) {
+      prevSelectedRecipe.parentNode.classList.remove('selected-recipe');
+    }
+  }
+
+  var selectedRecipe = utils.elements.recipeListSection.querySelector("a[href=\"#".concat(recId, "\"]"));
+
+  if (selectedRecipe) {
+    selectedRecipe.parentNode.classList.add('selected-recipe');
+  }
+};
+
+exports.selectedRecipeStyle = selectedRecipeStyle;
+},{"../utils":"js/utils.js"}],"js/views/shoppingCart.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.removeShoppingCartItem = exports.renderShoppingCartItems = void 0;
+
+var utils = _interopRequireWildcard(require("../utils"));
+
+function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
+var renderShoppingCartItems = function renderShoppingCartItems(cartItems) {
+  var shoppingCartItemsTemplate = cartItems.map(function (item) {
+    return "\n        <li class=\"cart-item\" data-id=\"".concat(item.id, "\">\n            <input type=\"number\" class=\"item-count\" value=\"").concat(item.count ? item.count : '-', "\" step=\"").concat(item.count, "\" min=\"0.25\">\n            <div class=\"item-unit text-center\">").concat(item.unit ? item.unit : '-', "</div>\n            <p class=\"item-ingredient\">").concat(item.ingredient ? item.ingredient : '-', "</p>\n            <span class=\"delete-button\">x</span>\n        </li>\n    ");
+  }).join('');
+  utils.elements.shoppingListSection.classList.remove('inactive');
+  utils.elements.cartItems.insertAdjacentHTML('beforeend', shoppingCartItemsTemplate);
+};
+
+exports.renderShoppingCartItems = renderShoppingCartItems;
+
+var removeShoppingCartItem = function removeShoppingCartItem(itemId) {
+  var itemToDelete = utils.elements.cartItems.querySelector("[data-id=\"".concat(itemId, "\"]"));
+  itemToDelete.parentNode.removeChild(itemToDelete);
+};
+
+exports.removeShoppingCartItem = removeShoppingCartItem;
 },{"../utils":"js/utils.js"}],"../node_modules/@babel/runtime/helpers/classCallCheck.js":[function(require,module,exports) {
 function _classCallCheck(instance, Constructor) {
   if (!(instance instanceof Constructor)) {
@@ -3009,6 +3074,24 @@ var Recipe = function Recipe(recipeId) {
     _this.recipeDetails.ingredients = newIngredients;
   };
 
+  this.updateServings = function (type) {
+    var newServings;
+
+    if (type === 'dec' && _this.servings > 1) {
+      newServings = _this.servings - 1;
+    } else if (type === 'inc') {
+      newServings = _this.servings + 1;
+    } else {
+      newServings = _this.servings;
+    }
+
+    _this.recipeDetails.ingredients.forEach(function (ing) {
+      ing.count *= newServings / _this.servings;
+    });
+
+    _this.servings = newServings;
+  };
+
   this.recipeId = recipeId;
 };
 
@@ -3181,7 +3264,154 @@ var reloadCSS = require('_css_loader');
 
 module.hot.dispose(reloadCSS);
 module.hot.accept(reloadCSS);
-},{"_css_loader":"../node_modules/parcel-bundler/src/builtins/css-loader.js"}],"js/index.js":[function(require,module,exports) {
+},{"_css_loader":"../node_modules/parcel-bundler/src/builtins/css-loader.js"}],"../node_modules/os-browserify/browser.js":[function(require,module,exports) {
+exports.endianness = function () { return 'LE' };
+
+exports.hostname = function () {
+    if (typeof location !== 'undefined') {
+        return location.hostname
+    }
+    else return '';
+};
+
+exports.loadavg = function () { return [] };
+
+exports.uptime = function () { return 0 };
+
+exports.freemem = function () {
+    return Number.MAX_VALUE;
+};
+
+exports.totalmem = function () {
+    return Number.MAX_VALUE;
+};
+
+exports.cpus = function () { return [] };
+
+exports.type = function () { return 'Browser' };
+
+exports.release = function () {
+    if (typeof navigator !== 'undefined') {
+        return navigator.appVersion;
+    }
+    return '';
+};
+
+exports.networkInterfaces
+= exports.getNetworkInterfaces
+= function () { return {} };
+
+exports.arch = function () { return 'javascript' };
+
+exports.platform = function () { return 'browser' };
+
+exports.tmpdir = exports.tmpDir = function () {
+    return '/tmp';
+};
+
+exports.EOL = '\n';
+
+exports.homedir = function () {
+	return '/'
+};
+
+},{}],"../node_modules/uniqid/index.js":[function(require,module,exports) {
+var process = require("process");
+/* 
+(The MIT License)
+Copyright (c) 2014-2019 Halász Ádám <mail@adamhalasz.com>
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+*/
+
+//  Unique Hexatridecimal ID Generator
+// ================================================
+
+//  Dependencies
+// ================================================
+var pid = process && process.pid ? process.pid.toString(36) : '' ;
+var address = '';
+if(typeof __webpack_require__ !== 'function'){
+    var mac = '', networkInterfaces = require('os').networkInterfaces();
+    for(let interface_key in networkInterfaces){
+        const networkInterface = networkInterfaces[interface_key];
+        const length = networkInterface.length;
+        for(var i = 0; i < length; i++){
+            if(networkInterface[i].mac && networkInterface[i].mac != '00:00:00:00:00:00'){
+                mac = networkInterface[i].mac; break;
+            }
+        }
+    }
+    address = mac ? parseInt(mac.replace(/\:|\D+/gi, '')).toString(36) : '' ;
+} 
+
+//  Exports
+// ================================================
+module.exports = module.exports.default = function(prefix, suffix){ return (prefix ? prefix : '') + address + pid + now().toString(36) + (suffix ? suffix : ''); }
+module.exports.process = function(prefix, suffix){ return (prefix ? prefix : '') + pid + now().toString(36) + (suffix ? suffix : ''); }
+module.exports.time    = function(prefix, suffix){ return (prefix ? prefix : '') + now().toString(36) + (suffix ? suffix : ''); }
+
+//  Helpers
+// ================================================
+function now(){
+    var time = Date.now();
+    var last = now.last || time;
+    return now.last = time > last ? time : last + 1;
+}
+
+},{"os":"../node_modules/os-browserify/browser.js","process":"../node_modules/process/browser.js"}],"js/models/ShoppingCart.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
+
+var _uniqid = _interopRequireDefault(require("uniqid"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var ShoppingCart = function ShoppingCart() {
+  var _this = this;
+
+  (0, _classCallCheck2.default)(this, ShoppingCart);
+
+  this.addItem = function (_ref) {
+    var count = _ref.count,
+        unit = _ref.unit,
+        ingredient = _ref.ingredient;
+    var itemObj = {
+      id: (0, _uniqid.default)(),
+      count: count,
+      unit: unit,
+      ingredient: ingredient
+    };
+
+    _this.items.push(itemObj);
+  };
+
+  this.deleteItem = function (id) {
+    var index = _this.items.findIndex(function (item) {
+      return item.id === id;
+    });
+
+    _this.items.splice(index, 1);
+  };
+
+  this.updateCount = function (id, newCount) {
+    _this.items.find(function (el) {
+      return el.id === id;
+    }).count = newCount;
+  };
+
+  this.items = [];
+};
+
+exports.default = ShoppingCart;
+},{"@babel/runtime/helpers/classCallCheck":"../node_modules/@babel/runtime/helpers/classCallCheck.js","uniqid":"../node_modules/uniqid/index.js"}],"js/index.js":[function(require,module,exports) {
 "use strict";
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
@@ -3192,6 +3422,8 @@ var recipeView = _interopRequireWildcard(require("./views/recipe"));
 
 var searchView = _interopRequireWildcard(require("./views/search"));
 
+var shoppingCartView = _interopRequireWildcard(require("./views/shoppingCart"));
+
 var utils = _interopRequireWildcard(require("./utils"));
 
 var _Recipe = _interopRequireDefault(require("./models/Recipe"));
@@ -3199,6 +3431,8 @@ var _Recipe = _interopRequireDefault(require("./models/Recipe"));
 var _Search = _interopRequireDefault(require("./models/Search"));
 
 require("../styles/main.scss");
+
+var _ShoppingCart = _interopRequireDefault(require("./models/ShoppingCart"));
 
 function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
 
@@ -3215,7 +3449,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 /** Global State of the Application
  * - Search Object
  * - Recipe Object
- * - Shopping List Object
+ * - Shopping Cart Object
  * - Favourites Object
  */
 var state = {};
@@ -3318,6 +3552,7 @@ var paginationButtonsClickHandler = function paginationButtonsClickHandler(event
     searchView.clearRecipes();
     searchView.clearPaginationButtons();
     searchView.renderRecipes(state.search.recipes, parseInt(event.target.dataset.goto));
+    searchView.selectedRecipeStyle(state.recipe, window.location.hash.replace('#', ''));
   }
 };
 
@@ -3337,24 +3572,25 @@ var loadRecipeDetails = /*#__PURE__*/function () {
             recipeId = window.location.hash.replace('#', '');
 
             if (!recipeId) {
-              _context3.next = 12;
+              _context3.next = 13;
               break;
             }
 
+            searchView.selectedRecipeStyle(state.recipe, recipeId);
             recipeView.clearRecipeDetails();
             utils.showLoader(utils.elements.recipeDetails);
             state.recipe = new _Recipe.default(recipeId);
-            _context3.next = 7;
+            _context3.next = 8;
             return state.recipe.getRecipeDetails();
 
-          case 7:
+          case 8:
             state.recipe.calculateTime();
             state.recipe.calculateServings();
             state.recipe.parseIngredients();
             utils.hideLoader(utils.elements.recipeDetails);
             recipeView.renderRecipeDetails(state.recipe);
 
-          case 12:
+          case 13:
           case "end":
             return _context3.stop();
         }
@@ -3367,10 +3603,61 @@ var loadRecipeDetails = /*#__PURE__*/function () {
   };
 }();
 
+var incDecButtonClickHandler = function incDecButtonClickHandler(event) {
+  if (event.target.matches('.inc-button')) {
+    state.recipe.updateServings('inc');
+  }
+
+  if (event.target.matches('.dec-button')) {
+    state.recipe.updateServings('dec');
+  }
+
+  recipeView.updateRecipeDetails(state.recipe);
+};
+
 ['hashchange', 'load'].forEach(function (event) {
   return window.addEventListener(event, loadRecipeDetails);
 });
-},{"@babel/runtime/regenerator":"../node_modules/@babel/runtime/regenerator/index.js","@babel/runtime/helpers/asyncToGenerator":"../node_modules/@babel/runtime/helpers/asyncToGenerator.js","./views/recipe":"js/views/recipe.js","./views/search":"js/views/search.js","./utils":"js/utils.js","./models/Recipe":"js/models/Recipe.js","./models/Search":"js/models/Search.js","../styles/main.scss":"styles/main.scss"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+utils.elements.recipeDetails.addEventListener('click', incDecButtonClickHandler);
+/**
+ * SHOPPING CART CONTROLLER
+ */
+
+var addToCartClickHandler = function addToCartClickHandler(event) {
+  if (event.target.matches('.add-to-cart-button')) {
+    if (!state.shoppingCart) {
+      state.shoppingCart = new _ShoppingCart.default();
+    }
+
+    state.recipe.recipeDetails.ingredients.forEach(function (ing) {
+      state.shoppingCart.addItem(ing);
+    });
+    shoppingCartView.renderShoppingCartItems(state.shoppingCart.items);
+  }
+};
+
+var deleteItemFromCartHandler = function deleteItemFromCartHandler(event) {
+  var itemId = event.target.closest(utils.selectors.cartItem).dataset.id;
+
+  if (event.target.matches(utils.selectors.deleteItemButton)) {
+    state.shoppingCart.deleteItem(itemId);
+    shoppingCartView.removeShoppingCartItem(itemId);
+  }
+};
+
+var inputCountClickHandler = function inputCountClickHandler(event) {
+  var itemId = event.target.closest(utils.selectors.cartItem).dataset.id;
+
+  if (event.target.matches('.item-count')) {
+    var newCount = event.target.value;
+    state.shoppingCart.updateCount(itemId, newCount);
+  }
+};
+
+utils.elements.recipeDetails.addEventListener('click', addToCartClickHandler);
+utils.elements.cartItems.addEventListener('click', deleteItemFromCartHandler);
+utils.elements.cartItems.addEventListener('click', inputCountClickHandler);
+},{"@babel/runtime/regenerator":"../node_modules/@babel/runtime/regenerator/index.js","@babel/runtime/helpers/asyncToGenerator":"../node_modules/@babel/runtime/helpers/asyncToGenerator.js","./views/recipe":"js/views/recipe.js","./views/search":"js/views/search.js","./views/shoppingCart":"js/views/shoppingCart.js","./utils":"js/utils.js","./models/Recipe":"js/models/Recipe.js","./models/Search":"js/models/Search.js","../styles/main.scss":"styles/main.scss","./models/ShoppingCart":"js/models/ShoppingCart.js"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;

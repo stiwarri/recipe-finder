@@ -31,6 +31,26 @@
     color: $secondary-color;
 }
 
+.section-title {
+    text-align: center;
+    text-transform: uppercase;
+    color: $secondary-color;
+}
+
+.inc-button, .dec-button {
+    padding: 1px 10px;
+    background-color: $primary-color;
+    color: white;
+    cursor: pointer;
+}
+
+.delete-button {
+    padding: 5px;
+    color: $secondary-color;
+    font-weight: bold;
+    cursor: pointer;
+}
+
 /* Auto complete Styles */
 .auto-complete {
     display: flex;

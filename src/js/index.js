@@ -1,14 +1,16 @@
 import * as recipeView from './views/recipe';
 import * as searchView from './views/search';
+import * as shoppingCartView from './views/shoppingCart';
 import * as utils from './utils';
 import Recipe from './models/Recipe';
 import Search from './models/Search';
 import '../styles/main.scss';
+import ShoppingCart from './models/ShoppingCart';
 
 /** Global State of the Application
  * - Search Object
  * - Recipe Object
- * - Shopping List Object
+ * - Shopping Cart Object
  * - Favourites Object
  */
 const state = {};
@@ -56,6 +58,7 @@ const paginationButtonsClickHandler = event => {
         searchView.clearRecipes();
         searchView.clearPaginationButtons();
         searchView.renderRecipes(state.search.recipes, parseInt(event.target.dataset.goto));
+        searchView.selectedRecipeStyle(state.recipe, window.location.hash.replace('#', ''));
     }
 }
 
@@ -68,6 +71,7 @@ utils.elements.recipeListSection.addEventListener('click', paginationButtonsClic
 const loadRecipeDetails = async () => {
     const recipeId = window.location.hash.replace('#', '');
     if (recipeId) {
+        searchView.selectedRecipeStyle(state.recipe, recipeId);
         recipeView.clearRecipeDetails();
         utils.showLoader(utils.elements.recipeDetails);
         state.recipe = new Recipe(recipeId);
@@ -80,4 +84,54 @@ const loadRecipeDetails = async () => {
     }
 }
 
+const incDecButtonClickHandler = event => {
+    if (event.target.matches('.inc-button')) {
+        state.recipe.updateServings('inc');
+    }
+    if (event.target.matches('.dec-button')) {
+        state.recipe.updateServings('dec');
+    }
+    recipeView.updateRecipeDetails(state.recipe);
+}
+
 ['hashchange', 'load'].forEach(event => window.addEventListener(event, loadRecipeDetails));
+utils.elements.recipeDetails.addEventListener('click', incDecButtonClickHandler);
+
+/**
+ * SHOPPING CART CONTROLLER
+ */
+const addToCartClickHandler = event => {
+    if (event.target.matches('.add-to-cart-button')) {
+        if (!state.shoppingCart) {
+            state.shoppingCart = new ShoppingCart();
+        }
+
+        state.recipe.recipeDetails.ingredients.forEach(ing => {
+            state.shoppingCart.addItem(ing);
+        });
+
+        shoppingCartView.renderShoppingCartItems(state.shoppingCart.items);
+    }
+}
+
+const deleteItemFromCartHandler = event => {
+    const itemId = event.target.closest(utils.selectors.cartItem).dataset.id;
+
+    if (event.target.matches(utils.selectors.deleteItemButton)) {
+        state.shoppingCart.deleteItem(itemId);
+        shoppingCartView.removeShoppingCartItem(itemId);
+    }
+}
+
+const inputCountClickHandler = event => {
+    const itemId = event.target.closest(utils.selectors.cartItem).dataset.id;
+
+    if (event.target.matches('.item-count')) {
+        const newCount = event.target.value;
+        state.shoppingCart.updateCount(itemId, newCount);
+    }
+}
+
+utils.elements.recipeDetails.addEventListener('click', addToCartClickHandler);
+utils.elements.cartItems.addEventListener('click', deleteItemFromCartHandler);
+utils.elements.cartItems.addEventListener('click', inputCountClickHandler);
