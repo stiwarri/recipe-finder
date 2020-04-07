@@ -23,7 +23,7 @@ export const renderRecipeDetails = (recipeObj, isFavourite) => {
         <div class="recipe-ingredients">
             ${recipeObj.recipeDetails.ingredients.map(ing => 
                `<h5 class="ingredient">
-                    <span class="ingredient-count secondary-text">${ing.count} </span> ${ing.unit} ${ing.ingredient}
+                    <span class="ingredient-count secondary-text">${Math.round(ing.count * 1000) / 1000} </span> ${ing.unit} ${ing.ingredient}
                 </h5>`
             ).join('')}
         </div>
@@ -51,6 +51,6 @@ export const updateRecipeDetails = recipe => {
 
     const allIngredientCounts = utils.elements.recipeDetails.querySelectorAll(utils.selectors.ingredientCount);
     Array.from(allIngredientCounts).forEach((el, i) => {
-        el.textContent = recipe.recipeDetails.ingredients[i].count;
+        el.textContent = Math.round(recipe.recipeDetails.ingredients[i].count * 1000) / 1000;
     });
 }

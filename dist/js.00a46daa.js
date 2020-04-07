@@ -1069,7 +1069,7 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 var renderRecipeDetails = function renderRecipeDetails(recipeObj, isFavourite) {
   var recipeDetailsTemplate = "\n        <div class=\"recipe-image-container text-center\">\n            <img class=\"recipe-image\" src=\"".concat(recipeObj.recipeDetails.image_url, "\" alt=\"recipe-image\">\n        </div>\n        <h3 class=\"primary-text text-center\">").concat(recipeObj.recipeDetails.title, "</h3>\n        <div class=\"servings-time\">\n            <h4 class=\"servings\">\n                Servings: \n                <span class=\"inc-button\">+</span>\n                <em class=\"servings-count secondary-text\">").concat(recipeObj.servings, "</em>\n                <span class=\"dec-button\">-</span>\n            </h4>\n            <h4 class=\"time\">\n                Time: <em class=\"secondary-text\">").concat(recipeObj.time, " Minutes</em>\n            </h4>\n            <h5 class=\"favourite ").concat(isFavourite ? 'remove-text' : 'add-text', "\">\n                ").concat(isFavourite ? 'Remove from favourites' : 'Add to favourites', "\n            </h5>\n        </div>\n        <div class=\"recipe-ingredients\">\n            ").concat(recipeObj.recipeDetails.ingredients.map(function (ing) {
-    return "<h5 class=\"ingredient\">\n                    <span class=\"ingredient-count secondary-text\">".concat(ing.count, " </span> ").concat(ing.unit, " ").concat(ing.ingredient, "\n                </h5>");
+    return "<h5 class=\"ingredient\">\n                    <span class=\"ingredient-count secondary-text\">".concat(Math.round(ing.count * 1000) / 1000, " </span> ").concat(ing.unit, " ").concat(ing.ingredient, "\n                </h5>");
   }).join(''), "\n        </div>\n        <div class=\"add-to-cart-button text-center\">Add to cart</div>  \n        <div class=\"cooking-directions\">    \n            <h3 class=\"direction-title primary-text text-center\">How To Cook It</h3>\n            <p class=\"text-center\">This recipe was carefully designed and tested by ").concat(recipeObj.recipeDetails.publisher, "</p>\n            <p class=\"text-center\">Please checkout directions at their website</p>\n            <div class=\"direction-button text-center\">\n                <a target=\"_blank\" href=\"").concat(recipeObj.recipeDetails.source_url, "\">Visit Publisher's Website</a>\n            </div>  \n        </div>\n    ");
   utils.elements.recipeDetails.insertAdjacentHTML('beforeend', recipeDetailsTemplate);
 };
@@ -1088,7 +1088,7 @@ var updateRecipeDetails = function updateRecipeDetails(recipe) {
   utils.elements.recipeDetails.querySelector(utils.selectors.servingsCount).textContent = recipe.servings;
   var allIngredientCounts = utils.elements.recipeDetails.querySelectorAll(utils.selectors.ingredientCount);
   Array.from(allIngredientCounts).forEach(function (el, i) {
-    el.textContent = recipe.recipeDetails.ingredients[i].count;
+    el.textContent = Math.round(recipe.recipeDetails.ingredients[i].count * 1000) / 1000;
   });
 };
 
@@ -3845,7 +3845,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "59775" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "65115" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
