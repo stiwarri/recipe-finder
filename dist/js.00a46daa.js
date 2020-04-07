@@ -910,7 +910,9 @@ var elements = {
   autoCompletes: document.querySelectorAll('.auto-complete'),
   recipeDetails: document.querySelector('.recipe-details'),
   shoppingListSection: document.getElementById('shopping-list-section'),
-  cartItems: document.querySelector('.cart-items')
+  cartItems: document.querySelector('.cart-items'),
+  favouriteList: document.querySelector('.favourite-recipes .recipes'),
+  favouriteButton: document.querySelector('.favourite-recipes .favourites')
 };
 exports.elements = elements;
 var selectors = {
@@ -922,7 +924,8 @@ var selectors = {
   servingsCount: '.servings .servings-count',
   ingredientCount: '.ingredient .ingredient-count',
   cartItem: '.cart-item',
-  deleteItemButton: '.delete-button'
+  deleteItemButton: '.delete-button',
+  addRemoveFavouriteButton: '.favourite'
 };
 exports.selectors = selectors;
 
@@ -1064,8 +1067,8 @@ function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return 
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
-var renderRecipeDetails = function renderRecipeDetails(recipeObj) {
-  var recipeDetailsTemplate = "\n        <div class=\"recipe-image-container text-center\">\n            <img class=\"recipe-image\" src=\"".concat(recipeObj.recipeDetails.image_url, "\" alt=\"recipe-image\">\n        </div>\n        <h3 class=\"primary-text text-center\">").concat(recipeObj.recipeDetails.title, "</h3>\n        <div class=\"servings-time\">\n            <h4 class=\"servings\">\n                Servings: \n                <span class=\"inc-button\">+</span>\n                <em class=\"servings-count secondary-text\">").concat(recipeObj.servings, "</em>\n                <span class=\"dec-button\">-</span>\n            </h4>\n            <h4 class=\"time\">\n                Time: <em class=\"secondary-text\">").concat(recipeObj.time, " Minutes</em>\n            </h4>\n            <h5 class=\"favourite primary-text\">\n                Add to favourites\n            </h5>\n        </div>\n        <div class=\"recipe-ingredients\">\n            ").concat(recipeObj.recipeDetails.ingredients.map(function (ing) {
+var renderRecipeDetails = function renderRecipeDetails(recipeObj, isFavourite) {
+  var recipeDetailsTemplate = "\n        <div class=\"recipe-image-container text-center\">\n            <img class=\"recipe-image\" src=\"".concat(recipeObj.recipeDetails.image_url, "\" alt=\"recipe-image\">\n        </div>\n        <h3 class=\"primary-text text-center\">").concat(recipeObj.recipeDetails.title, "</h3>\n        <div class=\"servings-time\">\n            <h4 class=\"servings\">\n                Servings: \n                <span class=\"inc-button\">+</span>\n                <em class=\"servings-count secondary-text\">").concat(recipeObj.servings, "</em>\n                <span class=\"dec-button\">-</span>\n            </h4>\n            <h4 class=\"time\">\n                Time: <em class=\"secondary-text\">").concat(recipeObj.time, " Minutes</em>\n            </h4>\n            <h5 class=\"favourite ").concat(isFavourite ? 'remove-text' : 'add-text', "\">\n                ").concat(isFavourite ? 'Remove from favourites' : 'Add to favourites', "\n            </h5>\n        </div>\n        <div class=\"recipe-ingredients\">\n            ").concat(recipeObj.recipeDetails.ingredients.map(function (ing) {
     return "<h5 class=\"ingredient\">\n                    <span class=\"ingredient-count secondary-text\">".concat(ing.count, " </span> ").concat(ing.unit, " ").concat(ing.ingredient, "\n                </h5>");
   }).join(''), "\n        </div>\n        <div class=\"add-to-cart-button text-center\">Add to cart</div>  \n        <div class=\"cooking-directions\">    \n            <h3 class=\"direction-title primary-text text-center\">How To Cook It</h3>\n            <p class=\"text-center\">This recipe was carefully designed and tested by ").concat(recipeObj.recipeDetails.publisher, "</p>\n            <p class=\"text-center\">Please checkout directions at their website</p>\n            <div class=\"direction-button text-center\">\n                <a target=\"_blank\" href=\"").concat(recipeObj.recipeDetails.source_url, "\">Visit Publisher's Website</a>\n            </div>  \n        </div>\n    ");
   utils.elements.recipeDetails.insertAdjacentHTML('beforeend', recipeDetailsTemplate);
@@ -1186,6 +1189,63 @@ var removeShoppingCartItem = function removeShoppingCartItem(itemId) {
 };
 
 exports.removeShoppingCartItem = removeShoppingCartItem;
+},{"../utils":"js/utils.js"}],"js/views/favourites.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.toggleActiveClasses = exports.updateFavouritesList = exports.changeFavouriteButtonText = exports.toggleFavouriteButton = void 0;
+
+var utils = _interopRequireWildcard(require("../utils"));
+
+function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
+var toggleFavouriteButton = function toggleFavouriteButton(numberOfFavouriteItems) {
+  if (numberOfFavouriteItems) {
+    utils.elements.favouriteButton.classList.remove('inactive');
+  } else {
+    utils.elements.favouriteButton.classList.add('inactive');
+  }
+};
+
+exports.toggleFavouriteButton = toggleFavouriteButton;
+
+var changeFavouriteButtonText = function changeFavouriteButtonText(operation) {
+  var addRemoveFavouriteButton = utils.elements.recipeDetails.querySelector(utils.selectors.addRemoveFavouriteButton);
+
+  if (operation === 'add') {
+    addRemoveFavouriteButton.classList.replace('add-text', 'remove-text');
+    addRemoveFavouriteButton.textContent = "Remove from favourites";
+  } else {
+    addRemoveFavouriteButton.classList.replace('remove-text', 'add-text');
+    addRemoveFavouriteButton.textContent = "Add to favourites";
+  }
+};
+
+exports.changeFavouriteButtonText = changeFavouriteButtonText;
+
+var updateFavouritesList = function updateFavouritesList(items) {
+  while (utils.elements.favouriteList.firstChild) {
+    utils.elements.favouriteList.removeChild(utils.elements.favouriteList.lastChild);
+  }
+
+  var favouriteItemsTemplate = items.map(function (el) {
+    return "\n        <li class=\"recipe\">\n            <a class=\"figure\" href=\"#".concat(el.id, "\">\n                <div class=\"recipe-image\">\n                    <img src=\"").concat(el.image, "\" alt=\"image\">\n                </div>\n                <div class=\"recipe-brief\">\n                    <h5>").concat(el.title, "</h5>\n                    <p>").concat(el.publisher, "</p>\n                </div>\n            </a>\n        </li>\n    ");
+  }).join('');
+  utils.elements.favouriteList.insertAdjacentHTML('beforeend', favouriteItemsTemplate);
+};
+
+exports.updateFavouritesList = updateFavouritesList;
+
+var toggleActiveClasses = function toggleActiveClasses() {
+  utils.elements.favouriteList.classList.toggle('inactive');
+  utils.elements.favouriteButton.classList.toggle('active-button');
+};
+
+exports.toggleActiveClasses = toggleActiveClasses;
 },{"../utils":"js/utils.js"}],"../node_modules/@babel/runtime/helpers/classCallCheck.js":[function(require,module,exports) {
 function _classCallCheck(instance, Constructor) {
   if (!(instance instanceof Constructor)) {
@@ -3411,7 +3471,65 @@ var ShoppingCart = function ShoppingCart() {
 };
 
 exports.default = ShoppingCart;
-},{"@babel/runtime/helpers/classCallCheck":"../node_modules/@babel/runtime/helpers/classCallCheck.js","uniqid":"../node_modules/uniqid/index.js"}],"js/index.js":[function(require,module,exports) {
+},{"@babel/runtime/helpers/classCallCheck":"../node_modules/@babel/runtime/helpers/classCallCheck.js","uniqid":"../node_modules/uniqid/index.js"}],"js/models/Favourites.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var Favourites = function Favourites() {
+  var _this = this;
+
+  (0, _classCallCheck2.default)(this, Favourites);
+
+  this.addItemToFavourites = function (id, title, publisher, image) {
+    var likedItemObj = {
+      id: id,
+      title: title,
+      publisher: publisher,
+      image: image
+    };
+
+    _this.items.push(likedItemObj);
+
+    _this.setFavouritesInLocalStorage();
+  };
+
+  this.removeItemFromFavourites = function (id) {
+    var index = _this.items.findIndex(function (el) {
+      return el.id === id;
+    });
+
+    _this.items.splice(index, 1);
+
+    _this.setFavouritesInLocalStorage();
+  };
+
+  this.isFavourite = function (id) {
+    return _this.items.findIndex(function (el) {
+      return el.id === id;
+    }) !== -1;
+  };
+
+  this.setFavouritesInLocalStorage = function () {
+    localStorage.setItem('favourites', JSON.stringify(_this.items));
+  };
+
+  this.getFavouritesFromLocalStorage = function () {
+    _this.items = localStorage.getItem('favourites') ? JSON.parse(localStorage.getItem('favourites')) : [];
+  };
+
+  this.items = [];
+};
+
+exports.default = Favourites;
+},{"@babel/runtime/helpers/classCallCheck":"../node_modules/@babel/runtime/helpers/classCallCheck.js"}],"js/index.js":[function(require,module,exports) {
 "use strict";
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
@@ -3424,6 +3542,8 @@ var searchView = _interopRequireWildcard(require("./views/search"));
 
 var shoppingCartView = _interopRequireWildcard(require("./views/shoppingCart"));
 
+var favouritesView = _interopRequireWildcard(require("./views/favourites"));
+
 var utils = _interopRequireWildcard(require("./utils"));
 
 var _Recipe = _interopRequireDefault(require("./models/Recipe"));
@@ -3433,6 +3553,8 @@ var _Search = _interopRequireDefault(require("./models/Search"));
 require("../styles/main.scss");
 
 var _ShoppingCart = _interopRequireDefault(require("./models/ShoppingCart"));
+
+var _Favourites = _interopRequireDefault(require("./models/Favourites"));
 
 function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
 
@@ -3564,7 +3686,7 @@ utils.elements.recipeListSection.addEventListener('click', paginationButtonsClic
 
 var loadRecipeDetails = /*#__PURE__*/function () {
   var _ref = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee3() {
-    var recipeId;
+    var recipeId, isFavourite;
     return _regenerator.default.wrap(function _callee3$(_context3) {
       while (1) {
         switch (_context3.prev = _context3.next) {
@@ -3572,7 +3694,7 @@ var loadRecipeDetails = /*#__PURE__*/function () {
             recipeId = window.location.hash.replace('#', '');
 
             if (!recipeId) {
-              _context3.next = 13;
+              _context3.next = 14;
               break;
             }
 
@@ -3584,13 +3706,14 @@ var loadRecipeDetails = /*#__PURE__*/function () {
             return state.recipe.getRecipeDetails();
 
           case 8:
+            isFavourite = state.favourites ? state.favourites.isFavourite(recipeId) : false;
             state.recipe.calculateTime();
             state.recipe.calculateServings();
             state.recipe.parseIngredients();
             utils.hideLoader(utils.elements.recipeDetails);
-            recipeView.renderRecipeDetails(state.recipe);
+            recipeView.renderRecipeDetails(state.recipe, isFavourite);
 
-          case 13:
+          case 14:
           case "end":
             return _context3.stop();
         }
@@ -3657,7 +3780,44 @@ var inputCountClickHandler = function inputCountClickHandler(event) {
 utils.elements.recipeDetails.addEventListener('click', addToCartClickHandler);
 utils.elements.cartItems.addEventListener('click', deleteItemFromCartHandler);
 utils.elements.cartItems.addEventListener('click', inputCountClickHandler);
-},{"@babel/runtime/regenerator":"../node_modules/@babel/runtime/regenerator/index.js","@babel/runtime/helpers/asyncToGenerator":"../node_modules/@babel/runtime/helpers/asyncToGenerator.js","./views/recipe":"js/views/recipe.js","./views/search":"js/views/search.js","./views/shoppingCart":"js/views/shoppingCart.js","./utils":"js/utils.js","./models/Recipe":"js/models/Recipe.js","./models/Search":"js/models/Search.js","../styles/main.scss":"styles/main.scss","./models/ShoppingCart":"js/models/ShoppingCart.js"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+/**
+ * FAVOURITES CONTROLLER
+ */
+
+var favouritesFunctionalityHandler = function favouritesFunctionalityHandler() {
+  state.favourites = new _Favourites.default();
+  state.favourites.getFavouritesFromLocalStorage();
+  favouritesView.toggleFavouriteButton(state.favourites.items.length);
+  favouritesView.updateFavouritesList(state.favourites.items);
+};
+
+var favouriteButtonClickHandler = function favouriteButtonClickHandler() {
+  favouritesView.toggleActiveClasses();
+};
+
+var addRemoveFavouriteButtonClickHandler = function addRemoveFavouriteButtonClickHandler(event) {
+  if (event.target.matches('.add-text')) {
+    if (!state.favourites) {
+      state.favourites = new _Favourites.default();
+    }
+
+    if (!state.favourites.isFavourite(state.recipe.recipeId)) {
+      state.favourites.addItemToFavourites(state.recipe.recipeId, state.recipe.recipeDetails.title, state.recipe.recipeDetails.publisher, state.recipe.recipeDetails.image_url);
+      favouritesView.changeFavouriteButtonText('add');
+    }
+  } else if (event.target.matches('.remove-text')) {
+    state.favourites.removeItemFromFavourites(state.recipe.recipeId);
+    favouritesView.changeFavouriteButtonText('remove');
+  }
+
+  favouritesView.toggleFavouriteButton(state.favourites.items.length);
+  favouritesView.updateFavouritesList(state.favourites.items);
+};
+
+window.addEventListener('load', favouritesFunctionalityHandler);
+utils.elements.recipeDetails.addEventListener('click', addRemoveFavouriteButtonClickHandler);
+utils.elements.favouriteButton.addEventListener('click', favouriteButtonClickHandler);
+},{"@babel/runtime/regenerator":"../node_modules/@babel/runtime/regenerator/index.js","@babel/runtime/helpers/asyncToGenerator":"../node_modules/@babel/runtime/helpers/asyncToGenerator.js","./views/recipe":"js/views/recipe.js","./views/search":"js/views/search.js","./views/shoppingCart":"js/views/shoppingCart.js","./views/favourites":"js/views/favourites.js","./utils":"js/utils.js","./models/Recipe":"js/models/Recipe.js","./models/Search":"js/models/Search.js","../styles/main.scss":"styles/main.scss","./models/ShoppingCart":"js/models/ShoppingCart.js","./models/Favourites":"js/models/Favourites.js"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -3685,7 +3845,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "64065" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "59775" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

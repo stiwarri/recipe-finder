@@ -1,6 +1,6 @@
 import * as utils from '../utils';
 
-export const renderRecipeDetails = recipeObj => {
+export const renderRecipeDetails = (recipeObj, isFavourite) => {
     const recipeDetailsTemplate = `
         <div class="recipe-image-container text-center">
             <img class="recipe-image" src="${recipeObj.recipeDetails.image_url}" alt="recipe-image">
@@ -16,8 +16,8 @@ export const renderRecipeDetails = recipeObj => {
             <h4 class="time">
                 Time: <em class="secondary-text">${recipeObj.time} Minutes</em>
             </h4>
-            <h5 class="favourite primary-text">
-                Add to favourites
+            <h5 class="favourite ${isFavourite ? 'remove-text' : 'add-text'}">
+                ${isFavourite ? 'Remove from favourites' : 'Add to favourites'}
             </h5>
         </div>
         <div class="recipe-ingredients">

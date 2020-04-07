@@ -9,7 +9,7 @@
 
 body {
     background-color: $background-color;
-    font-family: 'Lato', sans-serif;
+    font-family: 'Dosis', sans-serif;
     line-height: 1.6;
     overflow-x: hidden;
     box-sizing: border-box;
@@ -33,7 +33,6 @@ img {
     width: 80%;
     margin: auto;
     padding: 0 5rem;
-    overflow: hidden;
 }
 
 input:focus,
@@ -54,6 +53,44 @@ button:focus {
         display: flex;
         justify-content: space-between;
         align-items: center;
+
+        .favourite-recipes {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+
+            .favourites:hover {
+                font-size: 16px;
+                line-height: 32px;
+                border-bottom: 2px solid $primary-color;
+                transition: all 0.5s;
+            }
+
+            .recipes {
+                position: absolute;
+                top: 72px;
+                background-color: $background-color;
+                z-index: 101;
+                box-shadow: 2px 2px 4px grey;
+                width: 300px;
+                max-height: 400px;
+                overflow-y: scroll;
+
+                .recipe {
+                    border-bottom: 2px solid $secondary-color;
+                    padding: 1rem;
+                    color: $secondary-color;
+                    font-weight: bold;
+                    cursor: pointer;
+                    line-height: 2rem;
+
+                    &:hover {
+                        background-color: white;
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -130,7 +167,16 @@ button:focus {
 
                 .favourite {
                     text-decoration: underline;
+                    font-style: italic;
                     cursor: pointer;
+                }
+
+                .add-text {
+                    color: green;
+                }
+
+                .remove-text {
+                    color: red;
                 }
             }
 
@@ -154,7 +200,7 @@ button:focus {
             .cooking-directions {
                 margin: 2rem 0;
 
-                .direction-title  {
+                .direction-title {
                     margin: 1rem 0;
                 }
 
@@ -166,7 +212,7 @@ button:focus {
                     text-decoration: underline;
                     font-weight: bold;
                     cursor: pointer;
-                }    
+                }
             }
         }
     }

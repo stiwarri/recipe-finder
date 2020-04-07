@@ -5,7 +5,9 @@ export const elements = {
     autoCompletes: document.querySelectorAll('.auto-complete'),
     recipeDetails: document.querySelector('.recipe-details'),
     shoppingListSection: document.getElementById('shopping-list-section'),
-    cartItems: document.querySelector('.cart-items')
+    cartItems: document.querySelector('.cart-items'),
+    favouriteList: document.querySelector('.favourite-recipes .recipes'),
+    favouriteButton: document.querySelector('.favourite-recipes .favourites')
 };
 
 export const selectors = {
@@ -17,7 +19,8 @@ export const selectors = {
     servingsCount: '.servings .servings-count',
     ingredientCount: '.ingredient .ingredient-count',
     cartItem: '.cart-item',
-    deleteItemButton: '.delete-button'
+    deleteItemButton: '.delete-button',
+    addRemoveFavouriteButton: '.favourite'
 };
 
 export const createAutoComplete = ({

@@ -1,11 +1,13 @@
 import * as recipeView from './views/recipe';
 import * as searchView from './views/search';
 import * as shoppingCartView from './views/shoppingCart';
+import * as favouritesView from './views/favourites';
 import * as utils from './utils';
 import Recipe from './models/Recipe';
 import Search from './models/Search';
 import '../styles/main.scss';
 import ShoppingCart from './models/ShoppingCart';
+import Favourites from './models/Favourites';
 
 /** Global State of the Application
  * - Search Object
@@ -76,11 +78,12 @@ const loadRecipeDetails = async () => {
         utils.showLoader(utils.elements.recipeDetails);
         state.recipe = new Recipe(recipeId);
         await state.recipe.getRecipeDetails();
+        const isFavourite = state.favourites ? state.favourites.isFavourite(recipeId) : false; 
         state.recipe.calculateTime();
         state.recipe.calculateServings();
         state.recipe.parseIngredients();
         utils.hideLoader(utils.elements.recipeDetails);
-        recipeView.renderRecipeDetails(state.recipe);
+        recipeView.renderRecipeDetails(state.recipe, isFavourite);
     }
 }
 
@@ -135,3 +138,44 @@ const inputCountClickHandler = event => {
 utils.elements.recipeDetails.addEventListener('click', addToCartClickHandler);
 utils.elements.cartItems.addEventListener('click', deleteItemFromCartHandler);
 utils.elements.cartItems.addEventListener('click', inputCountClickHandler);
+
+/**
+ * FAVOURITES CONTROLLER
+ */
+const favouritesFunctionalityHandler = () => {
+    state.favourites = new Favourites();
+    state.favourites.getFavouritesFromLocalStorage();
+    favouritesView.toggleFavouriteButton(state.favourites.items.length);
+    favouritesView.updateFavouritesList(state.favourites.items);
+}
+
+const favouriteButtonClickHandler = () => {
+    favouritesView.toggleActiveClasses();
+}
+
+const addRemoveFavouriteButtonClickHandler = event => {
+    if (event.target.matches('.add-text')) {
+        if (!state.favourites) {
+            state.favourites = new Favourites();
+        }
+
+        if (!state.favourites.isFavourite(state.recipe.recipeId)) {
+            state.favourites.addItemToFavourites(
+                state.recipe.recipeId,
+                state.recipe.recipeDetails.title,
+                state.recipe.recipeDetails.publisher,
+                state.recipe.recipeDetails.image_url
+            );
+            favouritesView.changeFavouriteButtonText('add');
+        }
+    } else if (event.target.matches('.remove-text')) {
+        state.favourites.removeItemFromFavourites(state.recipe.recipeId);
+        favouritesView.changeFavouriteButtonText('remove');
+    }
+    favouritesView.toggleFavouriteButton(state.favourites.items.length);
+    favouritesView.updateFavouritesList(state.favourites.items);
+}
+
+window.addEventListener('load', favouritesFunctionalityHandler)
+utils.elements.recipeDetails.addEventListener('click', addRemoveFavouriteButtonClickHandler);
+utils.elements.favouriteButton.addEventListener('click', favouriteButtonClickHandler);

@@ -6,6 +6,13 @@
     display: none;
 }
 
+.active-button {
+    font-size: 16px;
+    line-height: 32px;
+    border-bottom: 2px solid $primary-color;
+    transition: all 0.5s;
+}
+
 .invisible {
     visibility: hidden;
 }
@@ -15,7 +22,8 @@
     display: flex;
     justify-content: space-between;
 
-    .next-page-nav-button, .prev-page-nav-button {
+    .next-page-nav-button,
+    .prev-page-nav-button {
         cursor: pointer;
         color: $secondary-color;
         font-weight: bold;
@@ -37,7 +45,8 @@
     color: $secondary-color;
 }
 
-.inc-button, .dec-button {
+.inc-button,
+.dec-button {
     padding: 1px 10px;
     background-color: $primary-color;
     color: white;
@@ -49,6 +58,17 @@
     color: $secondary-color;
     font-weight: bold;
     cursor: pointer;
+}
+
+.figure {
+    display: flex;
+    align-items: center;
+
+    .recipe-image img {
+        width: 50px;
+        height: 50px;
+        margin: 0 1rem 0 0;
+    }
 }
 
 /* Auto complete Styles */
