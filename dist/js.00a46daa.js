@@ -1114,7 +1114,7 @@ var showRecipeListSection = function showRecipeListSection() {
 exports.showRecipeListSection = showRecipeListSection;
 
 var renderRecipes = function renderRecipes(recipes, curPage) {
-  var recipesPerPage = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 10;
+  var recipesPerPage = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 15;
   var start = (curPage - 1) * recipesPerPage;
   var end = start + recipesPerPage;
   var totPages = Math.ceil(recipes.length / recipesPerPage);
@@ -3845,7 +3845,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "65115" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "62559" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

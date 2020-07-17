@@ -5,14 +5,13 @@
 * {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
 }
 
 body {
     background-color: $background-color;
     font-family: 'Dosis', sans-serif;
     line-height: 1.6;
-    overflow-x: hidden;
-    box-sizing: border-box;
 }
 
 a {
@@ -31,8 +30,9 @@ img {
 
 .container {
     width: 80%;
+    max-width: 1280px;
     margin: auto;
-    padding: 0 5rem;
+    overflow-x: hidden;
 }
 
 input:focus,
@@ -60,6 +60,10 @@ button:focus {
             align-items: center;
             cursor: pointer;
 
+            @media screen and (max-width: 640px) {
+                font-size: 12px;
+            }
+
             .favourites:hover {
                 font-size: 16px;
                 line-height: 32px;
@@ -85,6 +89,10 @@ button:focus {
                     cursor: pointer;
                     line-height: 2rem;
 
+                    @media screen and (max-width: 640px) {
+                        padding: .5rem;
+                    }
+
                     &:hover {
                         background-color: white;
                     }
@@ -101,6 +109,10 @@ button:focus {
     justify-items: center;
     grid-gap: 10px;
 
+    @media screen and (max-width: 640px) {
+        grid-gap: 5px;
+    }
+
     /* Recipe List Section Styles */
     #recipe-list-section {
         grid-column: column-start 1 / column-end 1;
@@ -108,6 +120,10 @@ button:focus {
         background-color: $primary-color;
         width: 100%;
         overflow-x: hidden;
+
+        @media screen and (max-width: 640px) {
+            padding: .5rem 0;
+        }
 
         .no-recipe-placeholder {
             text-align: center;
@@ -121,6 +137,10 @@ button:focus {
             .recipe-item {
                 padding: 1rem 1rem;
 
+                @media screen and (max-width: 640px) {
+                    padding: .25rem .25rem;
+                }
+
                 &:hover {
                     background-color: white;
                 }
@@ -128,17 +148,6 @@ button:focus {
 
             .selected-recipe {
                 background-color: white;
-            }
-
-            .figure {
-                display: flex;
-                align-items: center;
-
-                .recipe-image img {
-                    width: 50px;
-                    height: 50px;
-                    margin: 0 1rem 0 0;
-                }
             }
         }
     }
@@ -148,15 +157,32 @@ button:focus {
         grid-column: column-start 2 / column-end 3;
         padding: 1rem 0;
 
+        @media screen and (max-width: 640px) {
+            padding: .25rem 0;
+        }
+
         .recipe-details {
             margin: 2rem 0;
 
+            @media screen and (max-width: 640px) {
+                margin: .5rem 0;
+            }
+
             .recipe-image-container {
-                margin: 1rem 0;
+                margin: 1.5rem 0;
+
+                @media screen and (max-width: 640px) {
+                    margin: 1rem 0;
+                }
 
                 .recipe-image {
                     width: 400px;
                     height: 300px;
+
+                    @media screen and (max-width: 640px) {
+                        width: 100px;
+                        height: 100px;
+                    }
                 }
             }
 
@@ -164,6 +190,10 @@ button:focus {
                 display: flex;
                 justify-content: space-between;
                 margin: 1rem 0;
+
+                @media screen and (max-width: 640px) {
+                    font-size: 6px;
+                }
 
                 .favourite {
                     text-decoration: underline;
@@ -185,6 +215,11 @@ button:focus {
                 grid-template-columns: 1fr 1fr;
                 margin: 1rem 0;
                 grid-gap: 10px;
+
+                @media screen and (max-width: 640px) {
+                    font-size: 8px;
+                    grid-gap: 5px;
+                }
             }
 
             .add-to-cart-button {
@@ -195,10 +230,18 @@ button:focus {
                 color: $secondary-color;
                 font-weight: bold;
                 cursor: pointer;
+
+                @media screen and (max-width: 640px) {
+                    font-size: 12px;
+                }
             }
 
             .cooking-directions {
                 margin: 2rem 0;
+
+                @media screen and (max-width: 640px) {
+                    font-size: 8px;
+                }
 
                 .direction-title {
                     margin: 1rem 0;
@@ -212,6 +255,10 @@ button:focus {
                     text-decoration: underline;
                     font-weight: bold;
                     cursor: pointer;
+
+                    @media screen and (max-width: 640px) {
+                        padding: 1rem 0.25rem;
+                    }
                 }
             }
         }
@@ -222,16 +269,29 @@ button:focus {
         grid-column: column-start 4 / column-end 4;
         background-color: $primary-color;
         width: 100%;
+        padding: 1rem 0;
         overflow-x: hidden;
+
+        @media screen and (max-width: 640px) {
+            padding: .5rem 0;
+        }
 
         .cart-items {
             color: $secondary-color;
+
+            @media screen and (max-width: 640px) {
+                font-size: 6px;
+            }
 
             .cart-item {
                 display: grid;
                 grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 3fr) minmax(0, 0.5fr);
                 padding: 1rem 1rem;
                 align-items: center;
+
+                @media screen and (max-width: 640px) {
+                    padding: .25rem .25rem;
+                }
 
                 &:hover {
                     background-color: white;
