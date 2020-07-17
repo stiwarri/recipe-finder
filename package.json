@@ -1,5 +1,5 @@
 {
-    "name": "Recipe Finder",
+    "name": "recipe-finder",
     "version": "1.0.0",
     "description": "A food recipe search App",
     "main": "index.js",
