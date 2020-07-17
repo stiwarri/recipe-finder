@@ -1,26 +1,26 @@
 {
-  "name": "Foodify",
-  "version": "1.0.0",
-  "description": "A Food Ordering App",
-  "main": "index.js",
-  "scripts": {
-    "dev": "parcel src/index.html",
-    "build": "parcel build src/index.html"
-  },
-  "keywords": [],
-  "author": "Shubham Tiwari",
-  "license": "ISC",
-  "devDependencies": {
-    "@babel/core": "^7.9.0",
-    "@babel/plugin-transform-runtime": "^7.9.0",
-    "@babel/preset-env": "^7.9.0",
-    "babel-plugin-transform-class-properties": "^6.24.1",
-    "parcel-bundler": "^1.12.4",
-    "sass": "^1.26.3"
-  },
-  "dependencies": {
-    "axios": "^0.19.2",
-    "fractional": "^1.0.0",
-    "uniqid": "^5.2.0"
-  }
+    "name": "Recipe Finder",
+    "version": "1.0.0",
+    "description": "A food recipe search App",
+    "main": "index.js",
+    "scripts": {
+        "dev": "parcel src/index.html",
+        "build": "parcel build src/index.html"
+    },
+    "keywords": [],
+    "author": "Shubham Tiwari",
+    "license": "ISC",
+    "devDependencies": {
+        "@babel/core": "^7.9.0",
+        "@babel/plugin-transform-runtime": "^7.9.0",
+        "@babel/preset-env": "^7.9.0",
+        "babel-plugin-transform-class-properties": "^6.24.1",
+        "parcel-bundler": "^1.12.4",
+        "sass": "^1.26.3"
+    },
+    "dependencies": {
+        "axios": "^0.19.2",
+        "fractional": "^1.0.0",
+        "uniqid": "^5.2.0"
+    }
 }
