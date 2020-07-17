@@ -48,6 +48,7 @@ button:focus {
     color: $primary-color;
     height: 72px;
     line-height: 72px;
+    border-bottom: 3px solid $primary-color;
 
     .header-content {
         display: flex;
